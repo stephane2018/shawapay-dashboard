@@ -19,11 +19,11 @@ import {
     Link21,
     Code
 } from 'iconsax-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/input';
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
+import { Sheet, SheetContent, SheetTrigger } from '@/shared/ui/sheet';
+import { Badge } from '@/shared/ui/badge';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -34,6 +34,7 @@ import { cn } from '@/lib/utils';
 import { ThemeToggle } from './ThemeToggle';
 import { AccountSelector } from './AccountSelector';
 import { useAccount } from '@/core/contexts/AccountContext';
+import { useAuth } from '@/core/contexts/AuthContext';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -41,6 +42,7 @@ interface LayoutProps {
 
 const Sidebar = ({ className }: { className?: string }) => {
     const { currentAccount, activeAccountType, switchToMainAccount, environment } = useAccount();
+    const { logout } = useAuth();
 
     return (
         <div className={cn("flex flex-col h-full bg-card border-r", className)}>
@@ -175,7 +177,11 @@ const Sidebar = ({ className }: { className?: string }) => {
                                     <InfoCircle size={16} variant="Bulk" color="currentColor" />
                                     Aide
                                 </Button>
-                                <Button variant="ghost" className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20">
+                                <Button
+                                    variant="ghost"
+                                    className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20"
+                                    onClick={logout}
+                                >
                                     <Logout size={16} variant="Bulk" color="currentColor" />
                                     Déconnexion
                                 </Button>
@@ -221,7 +227,11 @@ const Sidebar = ({ className }: { className?: string }) => {
                             <Setting2 size={16} variant="Bulk" color="currentColor" />
                             Paramètres
                         </Button>
-                        <Button variant="ghost" className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20">
+                        <Button
+                            variant="ghost"
+                            className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20"
+                            onClick={logout}
+                        >
                             <Logout size={16} variant="Bulk" color="currentColor" />
                             Déconnexion
                         </Button>
@@ -238,6 +248,7 @@ const Sidebar = ({ className }: { className?: string }) => {
 
 export const Layout = ({ children }: LayoutProps) => {
     const { environment, setEnvironment } = useAccount();
+    const { logout } = useAuth();
 
     return (
         <div className="flex h-screen bg-muted/20">
@@ -427,7 +438,10 @@ export const Layout = ({ children }: LayoutProps) => {
                                     </DropdownMenuItem>
                                 </div>
                                 <div className="border-t py-2">
-                                    <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950/20">
+                                    <DropdownMenuItem
+                                        className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950/20"
+                                        onClick={logout}
+                                    >
                                         <Logout size={16} className="mr-2" />
                                         Déconnexion
                                     </DropdownMenuItem>

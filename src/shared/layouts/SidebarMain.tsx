@@ -1,44 +1,23 @@
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
-    ArrowSwapHorizontal,
-    Layer,
-    Card as CardIcon,
-    Setting2,
-    InfoCircle,
-    Logout,
     SearchNormal,
-    People,
-    Wallet2,
-    Gift
+    Logout
 } from 'iconsax-react';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { cn } from '@/lib/utils';
 import { AccountSelector } from '@/core/components/AccountSelector';
-import { useNavigation } from '@/core/contexts/NavigationContext';
-import { MAIN_ACCOUNT_ROUTES, type MainAccountRoute } from '@/core/routes';
+import { mainAccountNav, mainAccountGeneralNav } from '@/core/config/navigation';
+import { useAuth } from '@/core/contexts/AuthContext';
 
 interface SidebarProps {
     className?: string;
 }
 
-// Icon mapping for route icons
-const iconMap: Record<string, React.ElementType> = {
-    LayoutDashboard: Layer,
-    Receipt: ArrowSwapHorizontal,
-    Users: People,
-    CreditCard: CardIcon,
-    Gift: Gift,
-};
-
-// Convert MAIN_ACCOUNT_ROUTES to nav items
-const navItems = Object.entries(MAIN_ACCOUNT_ROUTES).map(([key, config]) => ({
-    id: key as MainAccountRoute,
-    label: config.label,
-    icon: iconMap[config.icon || 'LayoutDashboard'] || Layer,
-}));
-
 export const SidebarMain = ({ className }: SidebarProps) => {
-    const { activeSection, setActiveSection } = useNavigation();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { logout } = useAuth();
 
     return (
         <div className={cn("flex flex-col h-full bg-card border-r", className)}>
@@ -65,14 +44,14 @@ export const SidebarMain = ({ className }: SidebarProps) => {
                 <div>
                     <h3 className="mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Compte principal</h3>
                     <div className="space-y-1">
-                        {navItems.map((item) => {
-                            const isActive = activeSection === item.id;
+                        {mainAccountNav.map((item) => {
+                            const isActive = location.pathname.startsWith(item.path);
                             const Icon = item.icon;
                             return (
                                 <Button
-                                    key={item.id}
+                                    key={item.path}
                                     variant="ghost"
-                                    onClick={() => setActiveSection(item.id)}
+                                    onClick={() => navigate(item.path)}
                                     className={cn(
                                         'w-full justify-start gap-3 font-medium',
                                         isActive
@@ -91,15 +70,25 @@ export const SidebarMain = ({ className }: SidebarProps) => {
                 <div>
                     <h3 className="mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Général</h3>
                     <div className="space-y-1">
-                        <Button variant="ghost" className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground">
-                            <Setting2 size={16} variant="Bulk" color="currentColor" />
-                            Paramètres
-                        </Button>
-                        <Button variant="ghost" className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground">
-                            <InfoCircle size={16} variant="Bulk" color="currentColor" />
-                            Aide
-                        </Button>
-                        <Button variant="ghost" className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20">
+                        {mainAccountGeneralNav.map((item) => {
+                            const Icon = item.icon;
+                            return (
+                                <Button
+                                    key={item.path}
+                                    variant="ghost"
+                                    onClick={() => navigate(item.path)}
+                                    className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground"
+                                >
+                                    <Icon size={16} variant="Bulk" color="currentColor" />
+                                    {item.label}
+                                </Button>
+                            );
+                        })}
+                        <Button
+                            variant="ghost"
+                            className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20"
+                            onClick={logout}
+                        >
                             <Logout size={16} variant="Bulk" color="currentColor" />
                             Déconnexion
                         </Button>

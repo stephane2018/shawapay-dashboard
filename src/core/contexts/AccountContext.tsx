@@ -84,8 +84,20 @@ const mockMainAccount: MainAccount = {
 
 export const AccountProvider = ({ children }: { children: ReactNode }) => {
   const [mainAccount] = useState<MainAccount>(mockMainAccount);
-  const [currentAccount, setCurrentAccount] = useState<MainAccount | SubAccount>(mockMainAccount);
-  const [environment, setEnvironment] = useState<EnvironmentMode>('live');
+
+  // Initialize from localStorage if available
+  const [currentAccount, setCurrentAccount] = useState<MainAccount | SubAccount>(() => {
+    const savedAccountId = localStorage.getItem('shawapay_active_account_id');
+    if (savedAccountId && savedAccountId !== mainAccount.id) {
+      const subAccount = mainAccount.subAccounts.find(acc => acc.id === savedAccountId);
+      if (subAccount) return subAccount;
+    }
+    return mainAccount;
+  });
+
+  const [environment, setEnvironment] = useState<EnvironmentMode>(() => {
+    return (localStorage.getItem('shawapay_environment') as EnvironmentMode) || 'live';
+  });
 
   const activeAccountType: AccountType = 'id' in currentAccount && currentAccount.id === mainAccount.id
     ? 'main'
@@ -93,19 +105,24 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
 
   const switchToMainAccount = () => {
     setCurrentAccount(mainAccount);
+    localStorage.setItem('shawapay_active_account_id', mainAccount.id);
   };
 
   const switchToSubAccount = (subAccountId: string) => {
     const subAccount = mainAccount.subAccounts.find(acc => acc.id === subAccountId);
     if (subAccount) {
       setCurrentAccount(subAccount);
+      localStorage.setItem('shawapay_active_account_id', subAccount.id);
+
       // Synchroniser l'environnement avec celui du sous-compte
       setEnvironment(subAccount.environment);
+      localStorage.setItem('shawapay_environment', subAccount.environment);
     }
   };
 
   const handleSetEnvironment = (mode: EnvironmentMode) => {
     setEnvironment(mode);
+    localStorage.setItem('shawapay_environment', mode);
     // Si on change d'environnement, on peut filtrer les sous-comptes affichés
   };
 

@@ -1,32 +1,7 @@
+import { Outlet } from 'react-router-dom'
 import { AccountProvider, useAccount } from './core/contexts/AccountContext'
-import { NavigationProvider, useNavigation } from './core/contexts/NavigationContext'
 import { MainLayout } from './shared/layouts/MainLayout'
 import { SubAccountLayout } from './shared/layouts/SubAccountLayout'
-import {
-  getMainAccountComponent,
-  getSubAccountComponent
-} from './core/routes'
-import type { MainAccountRoute, SubAccountRoute } from './core/routes'
-
-const MainAccountContent = () => {
-  const { activeSection } = useNavigation();
-
-  // Map activeSection to MainAccountRoute
-  const route = (activeSection || 'dashboard') as MainAccountRoute;
-  const Component = getMainAccountComponent(route);
-
-  return <Component />;
-};
-
-const SubAccountContent = () => {
-  const { activeSection } = useNavigation();
-
-  // Map activeSection to SubAccountRoute
-  const route = (activeSection || 'transactions') as SubAccountRoute;
-  const Component = getSubAccountComponent(route);
-
-  return <Component />;
-};
 
 const AppContent = () => {
   const { activeAccountType } = useAccount();
@@ -34,25 +9,25 @@ const AppContent = () => {
   if (activeAccountType === 'main') {
     return (
       <MainLayout>
-        <MainAccountContent />
+        <Outlet />
       </MainLayout>
     );
   }
 
   return (
     <SubAccountLayout>
-      <SubAccountContent />
+      <Outlet />
     </SubAccountLayout>
   );
 };
 
 function App() {
   return (
-    <AccountProvider>
-      <NavigationProvider>
+    <ThemeProvider defaultTheme="system" storageKey="shawapay-ui-theme">
+      <AccountProvider>
         <AppContent />
-      </NavigationProvider>
-    </AccountProvider>
+      </AccountProvider>
+    </ThemeProvider>
   )
 }
 

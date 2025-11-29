@@ -1,49 +1,30 @@
 
 
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
-    Category,
     ArrowSwapHorizontal,
-    People,
-    Wallet2,
-    Card as CardIcon,
-    Link21,
-    Code,
-    Setting2,
-    Logout,
     SearchNormal,
     DocumentText,
-    Shop
+    Setting2,
+    Logout
 } from 'iconsax-react';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { cn } from '@/lib/utils';
 import { useAccount } from '@/core/contexts/AccountContext';
 import { AccountSelector } from '@/core/components/AccountSelector';
-import { useNavigation } from '@/core/contexts/NavigationContext';
-import { SUB_ACCOUNT_ROUTES, type SubAccountRoute } from '@/core/routes';
+import { subAccountNav } from '@/core/config/navigation';
+import { useAuth } from '@/core/contexts/AuthContext';
 
 interface SidebarProps {
     className?: string;
 }
 
-// Icon mapping for route icons
-const iconMap: Record<string, React.ElementType> = {
-    Receipt: ArrowSwapHorizontal,
-    Users: People,
-    Store: Shop,
-    Code: Code,
-};
-
-// Convert SUB_ACCOUNT_ROUTES to nav items
-const navItems = Object.entries(SUB_ACCOUNT_ROUTES).map(([key, config]) => ({
-    id: key as SubAccountRoute,
-    label: config.label,
-    icon: iconMap[config.icon || 'Category'] || Category,
-}));
-
 export const SidebarSub = ({ className }: SidebarProps) => {
     const { currentAccount, switchToMainAccount, environment, setEnvironment } = useAccount();
-    const { activeSection, setActiveSection } = useNavigation();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { logout } = useAuth();
 
     return (
         <div className={cn("flex flex-col h-full bg-card border-r", className)}>
@@ -124,14 +105,14 @@ export const SidebarSub = ({ className }: SidebarProps) => {
                 <div>
                     <h3 className="mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Navigation</h3>
                     <div className="space-y-1">
-                        {navItems.map((item) => {
-                            const isActive = activeSection === item.id;
+                        {subAccountNav.map((item) => {
+                            const isActive = location.pathname.startsWith(item.path);
                             const Icon = item.icon;
                             return (
                                 <Button
-                                    key={item.id}
+                                    key={item.path}
                                     variant={isActive ? "secondary" : "ghost"}
-                                    onClick={() => setActiveSection(item.id)}
+                                    onClick={() => navigate(item.path)}
                                     className={cn(
                                         'w-full justify-start gap-3 font-medium',
                                         isActive
@@ -154,7 +135,11 @@ export const SidebarSub = ({ className }: SidebarProps) => {
                             <Setting2 size={16} variant="Bulk" color="currentColor" />
                             Paramètres
                         </Button>
-                        <Button variant="ghost" className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20">
+                        <Button
+                            variant="ghost"
+                            className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20"
+                            onClick={logout}
+                        >
                             <Logout size={16} variant="Bulk" color="currentColor" />
                             Déconnexion
                         </Button>
