@@ -14,19 +14,28 @@ import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { cn } from '@/lib/utils';
 import { AccountSelector } from '@/core/components/AccountSelector';
-import { useNavigation, type MainSection } from '@/core/contexts/NavigationContext';
+import { useNavigation } from '@/core/contexts/NavigationContext';
+import { MAIN_ACCOUNT_ROUTES, type MainAccountRoute } from '@/core/routes';
 
 interface SidebarProps {
     className?: string;
 }
 
-const navItems: { id: MainSection; label: string; icon: React.ElementType }[] = [
-    { id: 'sous-comptes', label: 'Mes sous-comptes', icon: Layer },
-    { id: 'transactions', label: 'Mes transactions', icon: ArrowSwapHorizontal },
-    { id: 'utilisateurs', label: 'Utilisateurs', icon: People },
-    { id: 'abonnements', label: 'Mes abonnements', icon: CardIcon },
-    { id: 'recompenses', label: 'Récompenses', icon: Gift },
-];
+// Icon mapping for route icons
+const iconMap: Record<string, React.ElementType> = {
+    LayoutDashboard: Layer,
+    Receipt: ArrowSwapHorizontal,
+    Users: People,
+    CreditCard: CardIcon,
+    Gift: Gift,
+};
+
+// Convert MAIN_ACCOUNT_ROUTES to nav items
+const navItems = Object.entries(MAIN_ACCOUNT_ROUTES).map(([key, config]) => ({
+    id: key as MainAccountRoute,
+    label: config.label,
+    icon: iconMap[config.icon || 'LayoutDashboard'] || Layer,
+}));
 
 export const SidebarMain = ({ className }: SidebarProps) => {
     const { activeSection, setActiveSection } = useNavigation();

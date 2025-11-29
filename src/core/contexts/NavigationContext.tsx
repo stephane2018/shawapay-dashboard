@@ -1,20 +1,22 @@
 'use client'
 
 import React, { createContext, useContext, useState, useCallback } from 'react'
+import type { MainAccountRoute, SubAccountRoute } from '@/core/routes'
 
-export type MainSection = 'sous-comptes' | 'transactions' | 'utilisateurs' | 'abonnements' | 'recompenses'
+// Union type for all possible sections
+export type NavigationSection = MainAccountRoute | SubAccountRoute
 
 interface NavigationContextType {
-  activeSection: MainSection
-  setActiveSection: (section: MainSection) => void
+  activeSection: NavigationSection
+  setActiveSection: (section: NavigationSection) => void
 }
 
 const NavigationContext = createContext<NavigationContextType | undefined>(undefined)
 
 export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [activeSection, setActiveSectionState] = useState<MainSection>('sous-comptes')
+  const [activeSection, setActiveSectionState] = useState<NavigationSection>('dashboard')
 
-  const setActiveSection = useCallback((section: MainSection) => {
+  const setActiveSection = useCallback((section: NavigationSection) => {
     setActiveSectionState(section)
   }, [])
 

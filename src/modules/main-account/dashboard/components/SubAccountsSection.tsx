@@ -32,8 +32,6 @@ const SubAccountCard = ({ subAccount, onAccess, isActive }: SubAccountCardProps)
     return icons[type] || '📊';
   };
 
-
-  
   return (
     <div
       className={cn(
