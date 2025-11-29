@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { LoginPage, RegisterPage } from '@/modules/auth'
-import { ProtectedRoute } from '@/core/Guard/ProtectedRoute'
+import { ProtectedRoute } from '@/core/guard/ProtectedRoute'
+import { ThemeProvider } from '@/core/providers/ThemeProvider'
 import App from '@/App'
 
 // Main Account Pages
@@ -19,11 +20,19 @@ import { DevelopersPage } from '@/modules/sub-account/developpeurs';
 export const router = createBrowserRouter([
     {
         path: '/login',
-        element: <LoginPage />
+        element: (
+            <ThemeProvider defaultTheme="system" storageKey="shawapay-ui-theme">
+                <LoginPage />
+            </ThemeProvider>
+        )
     },
     {
         path: '/register',
-        element: <RegisterPage />
+        element: (
+            <ThemeProvider defaultTheme="system" storageKey="shawapay-ui-theme">
+                <RegisterPage />
+            </ThemeProvider>
+        )
     },
     {
         path: '/',
