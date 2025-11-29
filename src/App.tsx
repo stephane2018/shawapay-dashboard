@@ -1,6 +1,6 @@
 import { AccountProvider, useAccount } from './core/contexts/AccountContext'
 import { NavigationProvider, useNavigation } from './core/contexts/NavigationContext'
-import { DashboardPage } from './modules/dashboard/pages/DashboardPage'
+import { MainDashboardWrapper } from './modules/dashboard/pages/MainDashboardWrapper'
 import { TransactionsPage } from './modules/transactions/pages/TransactionsPage'
 import { UsersPage } from './modules/users/pages/UsersPage'
 import { RewardsPage } from './modules/rewards/pages/RewardsPage'
@@ -19,10 +19,10 @@ const MainAccountContent = () => {
     case 'recompenses':
       return <RewardsPage />;
     case 'abonnements':
-      return <DashboardPage />; // Placeholder for now
+      return <MainDashboardWrapper />; // Placeholder for now
     case 'sous-comptes':
     default:
-      return <DashboardPage />;
+      return <MainDashboardWrapper />;
   }
 };
 

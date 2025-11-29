@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { SubAccountProvider, useSubAccount } from '@/core/contexts/SubAccountContext'
 import { SubAccountSidebar } from '@/shared/layouts/SubAccountSidebar'
 import { Header } from '@/shared/layouts/Header'
@@ -29,12 +29,21 @@ const SubAccountContent = () => {
 }
 
 export const SubAccountLayoutPage = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+
   return (
     <SubAccountProvider>
       <div className="flex h-screen bg-background">
-        <SubAccountSidebar className="w-64 shrink-0" subAccountName="Sous-compte 1" />
+        <SubAccountSidebar
+          className={`${isSidebarOpen ? 'w-64' : 'w-0'} shrink-0 transition-all duration-300 overflow-hidden`}
+          subAccountName="Sous-compte 1"
+        />
         <div className="flex-1 flex flex-col overflow-hidden">
-          <Header SidebarComponent={SubAccountSidebar} />
+          <Header
+            SidebarComponent={SubAccountSidebar}
+            onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+            isSidebarOpen={isSidebarOpen}
+          />
           <main className="flex-1 overflow-y-auto">
             <div className="container mx-auto py-6 px-4 md:px-6">
               <SubAccountContent />

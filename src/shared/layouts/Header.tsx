@@ -14,14 +14,28 @@ import { cn } from '@/lib/utils';
 
 interface HeaderProps {
     SidebarComponent: React.ComponentType<{ className?: string }>;
+    onToggleSidebar?: () => void;
+    isSidebarOpen?: boolean;
 }
 
-export const Header = ({ SidebarComponent }: HeaderProps) => {
+export const Header = ({ SidebarComponent, onToggleSidebar, isSidebarOpen }: HeaderProps) => {
     const { environment, setEnvironment, activeAccountType } = useAccount();
 
     return (
         <header className="h-16 border-b bg-card flex items-center justify-between px-6">
-            <div className="flex items-center gap-4 ml-10 md:ml-0">
+            <div className="flex items-center gap-4">
+                {/* Desktop Sidebar Toggle */}
+                {onToggleSidebar && (
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="hidden md:flex"
+                        onClick={onToggleSidebar}
+                    >
+                        <HambergerMenu size={20} variant="Bulk" color="currentColor" />
+                    </Button>
+                )}
+
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <span className="hover:text-foreground cursor-pointer">Shawapay</span>
                     <span>/</span>
