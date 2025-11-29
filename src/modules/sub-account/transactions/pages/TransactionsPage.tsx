@@ -6,7 +6,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { TransactionDataTable, type StatusTab, type BulkAction, type OtherFilterOption } from '@/shared/components/common/data-table'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { RotateCcw, CheckCircle, XCircle, Clock, RefreshCcw, List, Eye } from 'lucide-react'
+import { TickCircle, CloseCircle, Clock, RefreshCircle, Category, Eye, RotateLeft } from 'iconsax-react'
 
 // Transaction type for sub-account
 interface Transaction {
@@ -188,7 +188,7 @@ const getColumns = (onViewDetails: (id: string) => void): ColumnDef<Transaction>
                     onViewDetails(row.original.id)
                 }}
             >
-                <Eye className="h-3 w-3" /> Détails
+                <Eye size={14} variant="Bulk" color="currentColor" className="text-primary" /> Détails
             </Button>
         ),
     },
@@ -196,11 +196,11 @@ const getColumns = (onViewDetails: (id: string) => void): ColumnDef<Transaction>
 
 // Status tabs
 const statusTabs: StatusTab[] = [
-    { value: 'success', label: 'Succès', icon: <CheckCircle className="h-4 w-4" /> },
-    { value: 'failed', label: 'Échec', icon: <XCircle className="h-4 w-4" /> },
-    { value: 'pending', label: 'En attente', icon: <Clock className="h-4 w-4" /> },
-    { value: 'refunded', label: 'Remboursé', icon: <RefreshCcw className="h-4 w-4" /> },
-    { value: 'all', label: 'Tout', icon: <List className="h-4 w-4" /> },
+    { value: 'success', label: 'Succès', icon: <TickCircle size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
+    { value: 'failed', label: 'Échec', icon: <CloseCircle size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
+    { value: 'pending', label: 'En attente', icon: <Clock size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
+    { value: 'refunded', label: 'Remboursé', icon: <RefreshCircle size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
+    { value: 'all', label: 'Tout', icon: <Category size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
 ]
 
 // Other filter options
@@ -258,7 +258,7 @@ export const TransactionsPage = () => {
     const bulkActions: BulkAction[] = [
         {
             label: 'Rembourser',
-            icon: <RotateCcw className="h-4 w-4" />,
+            icon: <RotateLeft size={16} variant="Bulk" color="currentColor" className="text-primary" />,
             onClick: (rows) => {
                 console.log('Refunding:', rows)
             },
