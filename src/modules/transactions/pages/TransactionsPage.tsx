@@ -2,10 +2,10 @@
 
 import React from 'react'
 import type { ColumnDef } from '@tanstack/react-table'
-import { TransactionDataTable, type StatusTab, type BulkAction } from '@/shared/components/common/data-table'
+import { TransactionDataTable, type StatusTab, type BulkAction, type OtherFilterOption } from '@/shared/components/common/data-table'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { RotateCcw } from 'lucide-react'
+import { RotateCcw, CheckCircle, XCircle, Clock, RefreshCcw, List } from 'lucide-react'
 
 // Transaction type
 interface Transaction {
@@ -255,23 +255,78 @@ const columns: ColumnDef<Transaction>[] = [
 
 // Status tabs
 const statusTabs: StatusTab[] = [
-  { value: 'success', label: 'Succès' },
-  { value: 'failed', label: 'Échec' },
-  { value: 'pending', label: 'En attente' },
-  { value: 'refunded', label: 'Remboursé' },
-  { value: 'all', label: 'Tout' },
+  { value: 'success', label: 'Succès', icon: <CheckCircle className="h-4 w-4" /> },
+  { value: 'failed', label: 'Échec', icon: <XCircle className="h-4 w-4" /> },
+  { value: 'pending', label: 'En attente', icon: <Clock className="h-4 w-4" /> },
+  { value: 'refunded', label: 'Remboursé', icon: <RefreshCcw className="h-4 w-4" /> },
+  { value: 'all', label: 'Tout', icon: <List className="h-4 w-4" /> },
+]
+
+// Other filter options for transactions
+const otherFilterOptions: OtherFilterOption[] = [
+  {
+    id: 'type',
+    label: 'Type',
+    options: [
+      { value: 'debit', label: 'Débit' },
+      { value: 'credit', label: 'Crédit' },
+    ],
+  },
+  {
+    id: 'source',
+    label: 'Source',
+    options: [
+      { value: 'mobile_money', label: 'Mobile Money' },
+      { value: 'card', label: 'Carte bancaire' },
+      { value: 'bank_transfer', label: 'Virement bancaire' },
+    ],
+  },
+  {
+    id: 'amount_range',
+    label: 'Montant',
+    options: [
+      { value: '0-10000', label: '0 - 10 000 XOF' },
+      { value: '10000-50000', label: '10 000 - 50 000 XOF' },
+      { value: '50000-100000', label: '50 000 - 100 000 XOF' },
+      { value: '100000+', label: '+ 100 000 XOF' },
+    ],
+  },
 ]
 
 export const TransactionsPage = () => {
   const [activeStatus, setActiveStatus] = React.useState('all')
   const [currentPage, setCurrentPage] = React.useState(1)
   const [isLoading, setIsLoading] = React.useState(false)
+  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>()
+  const [dateRange, setDateRange] = React.useState<{ from?: Date; to?: Date } | undefined>()
+  const [otherFilters, setOtherFilters] = React.useState<Record<string, string>>({})
 
   // Filter transactions by status
   const filteredTransactions = React.useMemo(() => {
-    if (activeStatus === 'all') return mockTransactions
-    return mockTransactions.filter((t) => t.status === activeStatus)
-  }, [activeStatus])
+    let result = mockTransactions
+
+    // Filter by status
+    if (activeStatus !== 'all') {
+      result = result.filter((t) => t.status === activeStatus)
+    }
+
+    // Filter by type (from other filters)
+    if (otherFilters.type) {
+      result = result.filter((t) => t.type === otherFilters.type)
+    }
+
+    // Filter by source (from other filters)
+    if (otherFilters.source) {
+      const sourceMap: Record<string, string> = {
+        mobile_money: 'Mobile Money',
+        card: 'Card',
+        bank_transfer: 'Bank Transfer',
+      }
+      result = result.filter((t) => t.source === sourceMap[otherFilters.source])
+    }
+
+    return result
+  }, [activeStatus, otherFilters])
 
   // Bulk actions
   const bulkActions: BulkAction[] = [
@@ -287,6 +342,21 @@ export const TransactionsPage = () => {
 
   const handleDownload = () => {
     console.log('Downloading transactions...')
+  }
+
+  const handleDateFilterChange = (date: Date | undefined) => {
+    setSelectedDate(date)
+    console.log('Date filter:', date)
+  }
+
+  const handlePeriodFilterChange = (range: { from?: Date; to?: Date } | undefined) => {
+    setDateRange(range)
+    console.log('Period filter:', range)
+  }
+
+  const handleOtherFiltersChange = (filters: Record<string, string>) => {
+    setOtherFilters(filters)
+    console.log('Other filters:', filters)
   }
 
   return (
@@ -311,6 +381,10 @@ export const TransactionsPage = () => {
           otherFilters: true,
           searchPlaceholder: 'Rechercher',
         }}
+        onDateFilterChange={handleDateFilterChange}
+        onPeriodFilterChange={handlePeriodFilterChange}
+        onOtherFiltersChange={handleOtherFiltersChange}
+        otherFilterOptions={otherFilterOptions}
         onDownload={handleDownload}
         bulkActions={bulkActions}
         pageSize={10}

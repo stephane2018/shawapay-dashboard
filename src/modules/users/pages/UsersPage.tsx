@@ -6,7 +6,7 @@ import { TransactionDataTable, type StatusTab } from '@/shared/components/common
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
-import { MoreHorizontal, Mail, Phone, Edit, Trash2 } from 'lucide-react'
+import { MoreHorizontal, Mail, Phone, Edit, Trash2, UserCheck, UserX, Clock, Users } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -177,10 +177,10 @@ const columns: ColumnDef<User>[] = [
 
 // Status tabs
 const statusTabs: StatusTab[] = [
-  { value: 'active', label: 'Actifs' },
-  { value: 'inactive', label: 'Inactifs' },
-  { value: 'pending', label: 'En attente' },
-  { value: 'all', label: 'Tous' },
+  { value: 'active', label: 'Actifs', icon: <UserCheck className="h-4 w-4" /> },
+  { value: 'inactive', label: 'Inactifs', icon: <UserX className="h-4 w-4" /> },
+  { value: 'pending', label: 'En attente', icon: <Clock className="h-4 w-4" /> },
+  { value: 'all', label: 'Tous', icon: <Users className="h-4 w-4" /> },
 ]
 
 export const UsersPage = () => {

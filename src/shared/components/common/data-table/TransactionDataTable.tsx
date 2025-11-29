@@ -37,14 +37,23 @@ import {
   ChevronLeft,
   ChevronRight,
   RotateCcw,
+  X,
 } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/ui/tabs'
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
+import { Calendar as CalendarComponent } from '@/shared/ui/calendar'
+import { Label } from '@/shared/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
+import { format } from 'date-fns'
+import { fr } from 'date-fns/locale'
+import type { DateRange } from 'react-day-picker'
 
 // Status tabs configuration
 export interface StatusTab {
   value: string
   label: string
   count?: number
+  icon?: React.ReactNode
 }
 
 // Filter configuration
@@ -53,6 +62,20 @@ export interface FilterConfig {
   periodFilter?: boolean
   otherFilters?: boolean
   searchPlaceholder?: string
+}
+
+// Other filters options
+export interface OtherFilterOption {
+  id: string
+  label: string
+  options: { value: string; label: string }[]
+}
+
+// Date filter state
+export interface DateFilterState {
+  date?: Date
+  range?: DateRange
+  otherFilters?: Record<string, string>
 }
 
 // Bulk action configuration
@@ -77,9 +100,10 @@ interface TransactionDataTableProps<T> {
   // Filters
   filterConfig?: FilterConfig
   onSearch?: (query: string) => void
-  onDateFilter?: () => void
-  onPeriodFilter?: () => void
-  onOtherFilters?: () => void
+  onDateFilterChange?: (date: Date | undefined) => void
+  onPeriodFilterChange?: (range: DateRange | undefined) => void
+  onOtherFiltersChange?: (filters: Record<string, string>) => void
+  otherFilterOptions?: OtherFilterOption[]
   onDownload?: () => void
 
   // Bulk actions
@@ -113,9 +137,10 @@ export function TransactionDataTable<T>({
     searchPlaceholder: 'Rechercher',
   },
   onSearch,
-  onDateFilter,
-  onPeriodFilter,
-  onOtherFilters,
+  onDateFilterChange,
+  onPeriodFilterChange,
+  onOtherFiltersChange,
+  otherFilterOptions = [],
   onDownload,
 
   bulkActions,
@@ -137,6 +162,14 @@ export function TransactionDataTable<T>({
     pageIndex: currentPage - 1,
     pageSize,
   })
+
+  // Filter states
+  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>()
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>()
+  const [otherFiltersState, setOtherFiltersState] = React.useState<Record<string, string>>({})
+  const [datePopoverOpen, setDatePopoverOpen] = React.useState(false)
+  const [periodPopoverOpen, setPeriodPopoverOpen] = React.useState(false)
+  const [otherFiltersPopoverOpen, setOtherFiltersPopoverOpen] = React.useState(false)
 
   // Add selection column if enabled
   const columns: ColumnDef<T>[] = React.useMemo(() => {
@@ -213,25 +246,225 @@ export function TransactionDataTable<T>({
     onSearch?.(e.target.value)
   }
 
+  // Handle date filter
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date)
+    onDateFilterChange?.(date)
+    if (date) setDatePopoverOpen(false)
+  }
+
+  // Handle period filter
+  const handlePeriodSelect = (range: DateRange | undefined) => {
+    setDateRange(range)
+    onPeriodFilterChange?.(range)
+  }
+
+  // Handle other filters
+  const handleOtherFilterChange = (filterId: string, value: string) => {
+    const newFilters = { ...otherFiltersState, [filterId]: value }
+    setOtherFiltersState(newFilters)
+    onOtherFiltersChange?.(newFilters)
+  }
+
+  // Clear date filter
+  const clearDateFilter = () => {
+    setSelectedDate(undefined)
+    onDateFilterChange?.(undefined)
+  }
+
+  // Clear period filter
+  const clearPeriodFilter = () => {
+    setDateRange(undefined)
+    onPeriodFilterChange?.(undefined)
+  }
+
+  // Clear other filters
+  const clearOtherFilters = () => {
+    setOtherFiltersState({})
+    onOtherFiltersChange?.({})
+  }
+
+  // Check if any filter is active
+  const hasActiveFilters = selectedDate || dateRange?.from || Object.keys(otherFiltersState).some(k => otherFiltersState[k])
+
   return (
     <div className="space-y-4">
       {/* Filters Row */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-2">
+          {/* Date Filter */}
           {filterConfig.dateFilter && (
-            <Button variant="outline" size="sm" className="gap-2" onClick={onDateFilter}>
-              <Calendar className="h-4 w-4" />
-              Filtrer par date
-            </Button>
+            <Popover open={datePopoverOpen} onOpenChange={setDatePopoverOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={cn(
+                    'gap-2',
+                    selectedDate && 'border-red-500 bg-red-50 text-red-600 dark:bg-red-950/30'
+                  )}
+                >
+                  <Calendar className="h-4 w-4" />
+                  {selectedDate ? format(selectedDate, 'dd MMM yyyy', { locale: fr }) : 'Filtrer par date'}
+                  {selectedDate && (
+                    <X
+                      className="h-3 w-3 ml-1 hover:text-red-700"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        clearDateFilter()
+                      }}
+                    />
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <CalendarComponent
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={handleDateSelect}
+                  locale={fr}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           )}
+
+          {/* Period Filter */}
           {filterConfig.periodFilter && (
-            <Button variant="outline" size="sm" className="gap-2" onClick={onPeriodFilter}>
-              <Calendar className="h-4 w-4" />
-              Filtrer par période
-            </Button>
+            <Popover open={periodPopoverOpen} onOpenChange={setPeriodPopoverOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={cn(
+                    'gap-2',
+                    dateRange?.from && 'border-red-500 bg-red-50 text-red-600 dark:bg-red-950/30'
+                  )}
+                >
+                  <Calendar className="h-4 w-4" />
+                  {dateRange?.from ? (
+                    dateRange.to ? (
+                      <>
+                        {format(dateRange.from, 'dd MMM', { locale: fr })} - {format(dateRange.to, 'dd MMM yyyy', { locale: fr })}
+                      </>
+                    ) : (
+                      format(dateRange.from, 'dd MMM yyyy', { locale: fr })
+                    )
+                  ) : (
+                    'Filtrer par période'
+                  )}
+                  {dateRange?.from && (
+                    <X
+                      className="h-3 w-3 ml-1 hover:text-red-700"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        clearPeriodFilter()
+                      }}
+                    />
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <CalendarComponent
+                  mode="range"
+                  selected={dateRange}
+                  onSelect={handlePeriodSelect}
+                  locale={fr}
+                  numberOfMonths={2}
+                  initialFocus
+                />
+                <div className="flex items-center justify-end gap-2 border-t p-3">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      clearPeriodFilter()
+                      setPeriodPopoverOpen(false)
+                    }}
+                  >
+                    Effacer
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => setPeriodPopoverOpen(false)}
+                    className="bg-red-600 hover:bg-red-700"
+                  >
+                    Appliquer
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
           )}
-          {filterConfig.otherFilters && (
-            <Button variant="outline" size="sm" className="gap-2" onClick={onOtherFilters}>
+
+          {/* Other Filters */}
+          {filterConfig.otherFilters && otherFilterOptions.length > 0 && (
+            <Popover open={otherFiltersPopoverOpen} onOpenChange={setOtherFiltersPopoverOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={cn(
+                    'gap-2',
+                    Object.keys(otherFiltersState).some(k => otherFiltersState[k]) &&
+                      'border-red-500 bg-red-50 text-red-600 dark:bg-red-950/30'
+                  )}
+                >
+                  <Filter className="h-4 w-4" />
+                  Autres filtres
+                  {Object.keys(otherFiltersState).filter(k => otherFiltersState[k]).length > 0 && (
+                    <span className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs text-white">
+                      {Object.keys(otherFiltersState).filter(k => otherFiltersState[k]).length}
+                    </span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80" align="start">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium">Filtres</h4>
+                    {Object.keys(otherFiltersState).some(k => otherFiltersState[k]) && (
+                      <Button variant="ghost" size="sm" onClick={clearOtherFilters} className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground">
+                        Réinitialiser
+                      </Button>
+                    )}
+                  </div>
+                  {otherFilterOptions.map((filter) => (
+                    <div key={filter.id} className="space-y-2">
+                      <Label className="text-sm">{filter.label}</Label>
+                      <Select
+                        value={otherFiltersState[filter.id] || ''}
+                        onValueChange={(value) => handleOtherFilterChange(filter.id, value)}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder={`Sélectionner ${filter.label.toLowerCase()}`} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {filter.options.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  ))}
+                  <div className="flex justify-end pt-2">
+                    <Button
+                      size="sm"
+                      onClick={() => setOtherFiltersPopoverOpen(false)}
+                      className="bg-red-600 hover:bg-red-700"
+                    >
+                      Appliquer
+                    </Button>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+          )}
+
+          {/* Simple Other Filters button when no options provided */}
+          {filterConfig.otherFilters && otherFilterOptions.length === 0 && (
+            <Button variant="outline" size="sm" className="gap-2">
               <Filter className="h-4 w-4" />
               Autres filtres
             </Button>
@@ -278,8 +511,9 @@ export function TransactionDataTable<T>({
                 <TabsTrigger
                   key={tab.value}
                   value={tab.value}
-                  className="rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-red-600 data-[state=active]:bg-transparent data-[state=active]:text-red-600 data-[state=active]:shadow-none"
+                  className="gap-2 rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-red-600 data-[state=active]:bg-transparent data-[state=active]:text-red-600 data-[state=active]:shadow-none"
                 >
+                  {tab.icon}
                   {tab.label}
                   {tab.count !== undefined && (
                     <span className="ml-1 text-xs text-muted-foreground">({tab.count})</span>

@@ -5,7 +5,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { TransactionDataTable, type StatusTab } from '@/shared/components/common/data-table'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { Gift, Trophy, Star, Zap } from 'lucide-react'
+import { Gift, Trophy, Star, Zap, CheckCircle, Clock, XCircle, List } from 'lucide-react'
 
 // Reward type
 interface Reward {
@@ -173,10 +173,10 @@ const columns: ColumnDef<Reward>[] = [
 
 // Status tabs
 const statusTabs: StatusTab[] = [
-  { value: 'available', label: 'Disponibles' },
-  { value: 'claimed', label: 'Réclamés' },
-  { value: 'expired', label: 'Expirés' },
-  { value: 'all', label: 'Tous' },
+  { value: 'available', label: 'Disponibles', icon: <CheckCircle className="h-4 w-4" /> },
+  { value: 'claimed', label: 'Réclamés', icon: <Gift className="h-4 w-4" /> },
+  { value: 'expired', label: 'Expirés', icon: <Clock className="h-4 w-4" /> },
+  { value: 'all', label: 'Tous', icon: <List className="h-4 w-4" /> },
 ]
 
 export const RewardsPage = () => {
