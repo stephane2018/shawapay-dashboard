@@ -301,14 +301,14 @@ export function TransactionDataTable<T>({
                   size="sm"
                   className={cn(
                     'gap-2',
-                    selectedDate && 'border-red-500 bg-red-50 text-red-600 dark:bg-red-950/30'
+                    selectedDate && 'border-violet-500 bg-gradient-to-r from-blue-50 to-violet-50 text-violet-600 dark:from-blue-950/30 dark:to-violet-950/30'
                   )}
                 >
                   <Calendar className="h-4 w-4" />
                   {selectedDate ? format(selectedDate, 'dd MMM yyyy', { locale: fr }) : 'Filtrer par date'}
                   {selectedDate && (
                     <X
-                      className="h-3 w-3 ml-1 hover:text-red-700"
+                      className="h-3 w-3 ml-1 hover:text-violet-700"
                       onClick={(e) => {
                         e.stopPropagation()
                         clearDateFilter()
@@ -338,7 +338,7 @@ export function TransactionDataTable<T>({
                   size="sm"
                   className={cn(
                     'gap-2',
-                    dateRange?.from && 'border-red-500 bg-red-50 text-red-600 dark:bg-red-950/30'
+                    dateRange?.from && 'border-violet-500 bg-gradient-to-r from-blue-50 to-violet-50 text-violet-600 dark:from-blue-950/30 dark:to-violet-950/30'
                   )}
                 >
                   <Calendar className="h-4 w-4" />
@@ -355,7 +355,7 @@ export function TransactionDataTable<T>({
                   )}
                   {dateRange?.from && (
                     <X
-                      className="h-3 w-3 ml-1 hover:text-red-700"
+                      className="h-3 w-3 ml-1 hover:text-violet-700"
                       onClick={(e) => {
                         e.stopPropagation()
                         clearPeriodFilter()
@@ -387,7 +387,7 @@ export function TransactionDataTable<T>({
                   <Button
                     size="sm"
                     onClick={() => setPeriodPopoverOpen(false)}
-                    className="bg-red-600 hover:bg-red-700"
+                    className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700"
                   >
                     Appliquer
                   </Button>
@@ -406,13 +406,13 @@ export function TransactionDataTable<T>({
                   className={cn(
                     'gap-2',
                     Object.keys(otherFiltersState).some(k => otherFiltersState[k]) &&
-                      'border-red-500 bg-red-50 text-red-600 dark:bg-red-950/30'
+                      'border-violet-500 bg-gradient-to-r from-blue-50 to-violet-50 text-violet-600 dark:from-blue-950/30 dark:to-violet-950/30'
                   )}
                 >
                   <Filter className="h-4 w-4" />
                   Autres filtres
                   {Object.keys(otherFiltersState).filter(k => otherFiltersState[k]).length > 0 && (
-                    <span className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs text-white">
+                    <span className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-r from-blue-600 to-violet-600 text-xs text-white">
                       {Object.keys(otherFiltersState).filter(k => otherFiltersState[k]).length}
                     </span>
                   )}
@@ -452,7 +452,7 @@ export function TransactionDataTable<T>({
                     <Button
                       size="sm"
                       onClick={() => setOtherFiltersPopoverOpen(false)}
-                      className="bg-red-600 hover:bg-red-700"
+                      className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700"
                     >
                       Appliquer
                     </Button>
@@ -511,7 +511,7 @@ export function TransactionDataTable<T>({
                 <TabsTrigger
                   key={tab.value}
                   value={tab.value}
-                  className="gap-2 rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-red-600 data-[state=active]:bg-transparent data-[state=active]:text-red-600 data-[state=active]:shadow-none"
+                  className="gap-2 rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-violet-600 data-[state=active]:bg-transparent data-[state=active]:text-violet-600 data-[state=active]:shadow-none"
                 >
                   {tab.icon}
                   {tab.label}

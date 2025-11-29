@@ -198,7 +198,7 @@ export const RewardsPage = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-red-600">Récompenses</h2>
+          <h2 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">Récompenses</h2>
           <p className="text-muted-foreground">
             Consultez et gérez vos récompenses
           </p>

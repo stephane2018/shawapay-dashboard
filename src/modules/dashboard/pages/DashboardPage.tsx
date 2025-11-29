@@ -75,7 +75,7 @@ const transactions = [
         time: "11:20 AM",
         price: "$22,750",
         status: "Pending",
-        statusColor: "text-red-500"
+        statusColor: "text-amber-500"
     },
     {
         id: "INV_000074",

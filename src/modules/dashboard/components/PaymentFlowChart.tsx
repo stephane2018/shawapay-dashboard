@@ -115,7 +115,7 @@ export const PaymentFlowChart = ({ totalAmount = 45000000, period = '30 jours' }
               90 jours
             </Button>
           </div>
-          <Button size="sm" className="gap-2 bg-red-600 hover:bg-red-700 text-white h-8">
+          <Button size="sm" className="gap-2 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white h-8">
             <Download className="w-3.5 h-3.5" />
             Télécharger
           </Button>

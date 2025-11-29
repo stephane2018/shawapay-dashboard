@@ -122,7 +122,7 @@ const Sidebar = ({ className }: { className?: string }) => {
                             <div className="space-y-1">
                                 <Button
                                     variant="ghost"
-                                    className="w-full justify-start gap-3 font-medium bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 dark:bg-red-950/30 dark:text-red-300"
+                                    className="w-full justify-start gap-3 font-medium bg-gradient-to-r from-blue-50 to-violet-50 text-violet-600 hover:from-blue-100 hover:to-violet-100 hover:text-violet-700 dark:from-blue-950/30 dark:to-violet-950/30 dark:text-violet-300"
                                 >
                                     <Layer size={16} variant="Bulk" color="currentColor" />
                                     Mes sous-comptes

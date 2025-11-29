@@ -362,7 +362,7 @@ export const TransactionsPage = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight text-red-600">Transactions</h2>
+        <h2 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">Transactions</h2>
         <p className="text-muted-foreground">
           Gérez et suivez toutes vos transactions
         </p>

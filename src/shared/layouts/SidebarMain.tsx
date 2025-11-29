@@ -67,7 +67,7 @@ export const SidebarMain = ({ className }: SidebarProps) => {
                                     className={cn(
                                         'w-full justify-start gap-3 font-medium',
                                         isActive
-                                            ? 'bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 dark:bg-red-950/30 dark:text-red-300'
+                                            ? 'bg-gradient-to-r from-blue-50 to-violet-50 text-violet-600 hover:from-blue-100 hover:to-violet-100 hover:text-violet-700 dark:from-blue-950/30 dark:to-violet-950/30 dark:text-violet-300'
                                             : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
                                     )}
                                 >
