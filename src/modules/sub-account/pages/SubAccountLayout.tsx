@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { SubAccountProvider, useSubAccount } from '@/core/contexts/SubAccountContext'
 import { SubAccountSidebar } from '@/shared/layouts/SubAccountSidebar'
 import { Header } from '@/shared/layouts/Header'
