@@ -15,7 +15,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/shared/ui/chart';
-import { Download, Calendar } from 'lucide-react';
+import { Download } from 'lucide-react';
+import { Calendar } from 'iconsax-react';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/core/lib/utils';
 

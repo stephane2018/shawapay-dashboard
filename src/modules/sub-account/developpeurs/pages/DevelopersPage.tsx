@@ -8,17 +8,13 @@ import { Label } from '@/shared/ui/label'
 import { Badge } from '@/shared/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs'
 import {
-    Code,
-    Key,
-    Book,
     Copy,
     Eye,
     EyeOff,
-    CheckCircle,
     AlertCircle,
-    RefreshCw,
     Terminal
 } from 'lucide-react'
+import { TickCircle, RefreshCircle } from 'iconsax-react'
 
 export const DevelopersPage = () => {
     const [showLiveKey, setShowLiveKey] = React.useState(false)

@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { TrendingUp } from 'lucide-react';
+import { TrendingUp } from 'iconsax-react';
 import { Pie, PieChart, Sector } from 'recharts';
 import type { PieSectorDataItem } from 'recharts/types/polar/Pie';
 

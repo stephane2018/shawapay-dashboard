@@ -3,7 +3,7 @@ import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/shared/ui/tabs';
 import { Add, ArrowRight, Layer } from 'iconsax-react';
-import { Settings, CreditCard, Smartphone, Zap } from 'lucide-react';
+import { Settings, CreditCard, Smartphone, Zap } from 'iconsax-react';
 import { useAccount } from '@/core/contexts/AccountContext';
 import type { SubAccount } from '@/core/types/account.types';
 import { cn } from '@/lib/utils';

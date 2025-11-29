@@ -2,7 +2,8 @@
 
 import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Copy, Download, RotateCcw, MapPin, User, Phone, Mail, Globe } from 'lucide-react'
+import { ArrowLeft, Copy, Download, MapPin, User, Phone, Mail, Globe } from 'lucide-react'
+import { RotateLeft } from 'iconsax-react'
 import { Button } from '@/shared/ui/button'
 import { Badge } from '@/shared/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
@@ -154,7 +155,7 @@ export const TransactionDetailPage = () => {
                 </div>
                 <div className="flex items-center gap-2">
                     <Button variant="outline" className="gap-2 text-red-600 border-red-200 hover:bg-red-50 dark:border-red-800 dark:hover:bg-red-950/20">
-                        <RotateCcw className="h-4 w-4" />
+                        <RotateLeft className="h-4 w-4" />
                         Rembourser
                     </Button>
                     <Button variant="outline" className="gap-2">

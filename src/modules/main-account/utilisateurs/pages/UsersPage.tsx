@@ -6,7 +6,7 @@ import { TransactionDataTable, type StatusTab } from '@/shared/components/common
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
-import { MoreHorizontal, Mail, Phone, Edit, Trash2, UserCheck, UserX, Clock, Users } from 'lucide-react'
+import { More, Sms, Call, Edit, Trash, UserCheck, UserClose, Clock, People } from 'iconsax-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -156,18 +156,18 @@ const columns: ColumnDef<User>[] = [
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="h-8 w-8">
-            <MoreHorizontal className="h-4 w-4" />
+            <More size={16} variant="Bulk" color="currentColor" className="text-primary" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem className="gap-2">
-            <Mail className="h-4 w-4" /> Envoyer un email
+            <Sms size={16} variant="Bulk" color="currentColor" /> Envoyer un email
           </DropdownMenuItem>
           <DropdownMenuItem className="gap-2">
-            <Edit className="h-4 w-4" /> Modifier
+            <Edit size={16} variant="Bulk" color="currentColor" /> Modifier
           </DropdownMenuItem>
           <DropdownMenuItem className="gap-2 text-red-600">
-            <Trash2 className="h-4 w-4" /> Supprimer
+            <Trash size={16} variant="Bulk" color="currentColor" /> Supprimer
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -177,10 +177,10 @@ const columns: ColumnDef<User>[] = [
 
 // Status tabs
 const statusTabs: StatusTab[] = [
-  { value: 'active', label: 'Actifs', icon: <UserCheck className="h-4 w-4" /> },
-  { value: 'inactive', label: 'Inactifs', icon: <UserX className="h-4 w-4" /> },
-  { value: 'pending', label: 'En attente', icon: <Clock className="h-4 w-4" /> },
-  { value: 'all', label: 'Tous', icon: <Users className="h-4 w-4" /> },
+  { value: 'active', label: 'Actifs', icon: <UserCheck size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
+  { value: 'inactive', label: 'Inactifs', icon: <UserClose size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
+  { value: 'pending', label: 'En attente', icon: <Clock size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
+  { value: 'all', label: 'Tous', icon: <People size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
 ]
 
 export const UsersPage = () => {

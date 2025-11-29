@@ -5,7 +5,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { TransactionDataTable, type StatusTab } from '@/shared/components/common/data-table'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { Gift, Trophy, Star, Zap, CheckCircle, Clock, XCircle, List } from 'lucide-react'
+import { Gift, Trophy, Star, Zap, TickCircle, Clock, CloseCircle, Category } from 'iconsax-react'
 
 // Reward type
 interface Reward {
@@ -89,10 +89,10 @@ const StatusBadge = ({ status }: { status: Reward['status'] }) => {
 // Type icon component
 const TypeIcon = ({ type }: { type: Reward['type'] }) => {
   const icons = {
-    cashback: <Gift className="h-5 w-5 text-green-600" />,
-    bonus: <Trophy className="h-5 w-5 text-amber-600" />,
-    points: <Star className="h-5 w-5 text-purple-600" />,
-    discount: <Zap className="h-5 w-5 text-blue-600" />,
+    cashback: <Gift size={20} variant="Bulk" color="currentColor" className="text-green-600" />,
+    bonus: <Trophy size={20} variant="Bulk" color="currentColor" className="text-amber-600" />,
+    points: <Star size={20} variant="Bulk" color="currentColor" className="text-purple-600" />,
+    discount: <Zap size={20} variant="Bulk" color="currentColor" className="text-blue-600" />,
   }
   return icons[type]
 }
@@ -173,10 +173,10 @@ const columns: ColumnDef<Reward>[] = [
 
 // Status tabs
 const statusTabs: StatusTab[] = [
-  { value: 'available', label: 'Disponibles', icon: <CheckCircle className="h-4 w-4" /> },
-  { value: 'claimed', label: 'Réclamés', icon: <Gift className="h-4 w-4" /> },
-  { value: 'expired', label: 'Expirés', icon: <Clock className="h-4 w-4" /> },
-  { value: 'all', label: 'Tous', icon: <List className="h-4 w-4" /> },
+  { value: 'available', label: 'Disponibles', icon: <TickCircle size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
+  { value: 'claimed', label: 'Réclamés', icon: <Gift size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
+  { value: 'expired', label: 'Expirés', icon: <Clock size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
+  { value: 'all', label: 'Tous', icon: <Category size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
 ]
 
 export const RewardsPage = () => {
