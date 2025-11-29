@@ -4,6 +4,7 @@ import { DashboardPage } from './modules/dashboard/pages/DashboardPage'
 import { TransactionsPage } from './modules/transactions/pages/TransactionsPage'
 import { UsersPage } from './modules/users/pages/UsersPage'
 import { RewardsPage } from './modules/rewards/pages/RewardsPage'
+import { SubAccountsPage } from './modules/sub-account'
 import { MainLayout } from './shared/layouts/MainLayout'
 import { SubAccountLayout } from './shared/layouts/SubAccountLayout'
 
@@ -20,6 +21,7 @@ const MainAccountContent = () => {
     case 'abonnements':
       return <DashboardPage />; // Placeholder for now
     case 'sous-comptes':
+      return <SubAccountsPage />;
     default:
       return <DashboardPage />;
   }
