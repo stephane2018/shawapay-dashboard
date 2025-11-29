@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import { AccountProvider, useAccount } from './core/contexts/AccountContext'
+import { ThemeProvider } from './core/providers/ThemeProvider'
 import { MainLayout } from './shared/layouts/MainLayout'
 import { SubAccountLayout } from './shared/layouts/SubAccountLayout'
 
