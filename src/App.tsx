@@ -1,10 +1,11 @@
 import { AccountProvider, useAccount } from './core/contexts/AccountContext'
 import { NavigationProvider, useNavigation } from './core/contexts/NavigationContext'
-import { MainDashboardWrapper } from './modules/dashboard/pages/MainDashboardWrapper'
+import { SubAccountProvider, useSubAccount } from './core/contexts/SubAccountContext'
+import { DashboardPage } from './modules/dashboard/pages/DashboardPage'
 import { TransactionsPage } from './modules/transactions/pages/TransactionsPage'
 import { UsersPage } from './modules/users/pages/UsersPage'
 import { RewardsPage } from './modules/rewards/pages/RewardsPage'
-import { SubAccountLayoutPage } from './modules/sub-account/pages/SubAccountLayout'
+import { SubAccountDetailPage } from './modules/sub-accounts/pages'
 import { MainLayout } from './shared/layouts/MainLayout'
 import { SubAccountLayout } from './shared/layouts/SubAccountLayout'
 
@@ -19,11 +20,21 @@ const MainAccountContent = () => {
     case 'recompenses':
       return <RewardsPage />;
     case 'abonnements':
-      return <MainDashboardWrapper />; // Placeholder for now
+      return <DashboardPage />; // Placeholder for now
     case 'sous-comptes':
     default:
-      return <MainDashboardWrapper />;
+      return <DashboardPage />;
   }
+};
+
+const SubAccountContent = () => {
+  const { activeSubAccountId } = useSubAccount();
+
+  if (!activeSubAccountId) {
+    return <DashboardPage />;
+  }
+
+  return <SubAccountDetailPage />;
 };
 
 const AppContent = () => {
@@ -37,14 +48,20 @@ const AppContent = () => {
     );
   }
 
-  return <SubAccountLayoutPage />;
+  return (
+    <SubAccountLayout>
+      <SubAccountContent />
+    </SubAccountLayout>
+  );
 };
 
 function App() {
   return (
     <AccountProvider>
       <NavigationProvider>
-        <AppContent />
+        <SubAccountProvider>
+          <AppContent />
+        </SubAccountProvider>
       </NavigationProvider>
     </AccountProvider>
   )

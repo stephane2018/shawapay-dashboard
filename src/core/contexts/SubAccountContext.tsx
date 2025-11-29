@@ -2,27 +2,33 @@
 
 import React, { createContext, useContext, useState, useCallback } from 'react'
 
-export type SubAccountSection = 'dashboard' | 'transactions' | 'clients' | 'reversements' | 'developers'
+export type SubAccountSection = 'overview' | 'transactions' | 'settings'
 
 interface SubAccountContextType {
+  activeSubAccountId: string | null
   activeSection: SubAccountSection
+  setActiveSubAccountId: (id: string | null) => void
   setActiveSection: (section: SubAccountSection) => void
-  currentSubAccountId?: string
-  setCurrentSubAccountId: (id: string) => void
 }
 
 const SubAccountContext = createContext<SubAccountContextType | undefined>(undefined)
 
 export const SubAccountProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [activeSection, setActiveSectionState] = useState<SubAccountSection>('dashboard')
-  const [currentSubAccountId, setCurrentSubAccountId] = useState<string>()
+  const [activeSubAccountId, setActiveSubAccountIdState] = useState<string | null>(null)
+  const [activeSection, setActiveSectionState] = useState<SubAccountSection>('overview')
+
+  const setActiveSubAccountId = useCallback((id: string | null) => {
+    setActiveSubAccountIdState(id)
+    // Reset section when switching sub-accounts
+    if (id) setActiveSectionState('overview')
+  }, [])
 
   const setActiveSection = useCallback((section: SubAccountSection) => {
     setActiveSectionState(section)
   }, [])
 
   return (
-    <SubAccountContext.Provider value={{ activeSection, setActiveSection, currentSubAccountId, setCurrentSubAccountId }}>
+    <SubAccountContext.Provider value={{ activeSubAccountId, activeSection, setActiveSubAccountId, setActiveSection }}>
       {children}
     </SubAccountContext.Provider>
   )

@@ -5,6 +5,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/shared/ui/tabs';
 import { Add, ArrowRight, Layer } from 'iconsax-react';
 import { Settings, CreditCard, Smartphone, Zap } from 'lucide-react';
 import { useAccount } from '@/core/contexts/AccountContext';
+import { useSubAccount } from '@/core/contexts/SubAccountContext';
 import type { SubAccount } from '@/core/types/account.types';
 import { cn } from '@/lib/utils';
 
@@ -104,10 +105,16 @@ const SubAccountCard = ({ subAccount, onAccess, isActive }: SubAccountCardProps)
 
 export const SubAccountsSection = () => {
   const { mainAccount, switchToSubAccount, activeAccountType } = useAccount();
+  const { setActiveSubAccountId } = useSubAccount();
 
   if (activeAccountType === 'sub') {
     return null;
   }
+
+  const handleAccessSubAccount = (subAccountId: string) => {
+    setActiveSubAccountId(subAccountId);
+    switchToSubAccount(subAccountId);
+  };
 
   const tabs = [
     { label: 'Intégration', value: 'Intégration', icon: Settings },
@@ -237,7 +244,7 @@ export const SubAccountsSection = () => {
                       <SubAccountCard
                         key={subAccount.id}
                         subAccount={subAccount}
-                        onAccess={switchToSubAccount}
+                        onAccess={handleAccessSubAccount}
                         isActive={false}
                       />
                     ))
