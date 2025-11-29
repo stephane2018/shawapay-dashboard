@@ -12,7 +12,7 @@ import { SubscriptionsPage } from '@/modules/main-account/abonnements';
 import { RewardsPage } from '@/modules/main-account/recompenses';
 
 // Sub-Account Pages
-import { TransactionsPage as SubTransactionsPage } from '@/modules/sub-account/transactions';
+import { TransactionsPage as SubTransactionsPage, TransactionDetailPage } from '@/modules/sub-account/transactions';
 import { ClientsPage } from '@/modules/sub-account/clients';
 import { StorePage } from '@/modules/sub-account/ma-boutique';
 import { DevelopersPage } from '@/modules/sub-account/developpeurs';
@@ -87,6 +87,10 @@ export const router = createBrowserRouter([
                     {
                         path: 'transactions',
                         element: <SubTransactionsPage />
+                    },
+                    {
+                        path: 'transactions/:transactionId',
+                        element: <TransactionDetailPage />
                     },
                     {
                         path: 'clients',

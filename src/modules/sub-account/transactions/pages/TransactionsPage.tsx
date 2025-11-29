@@ -1,11 +1,12 @@
 'use client'
 
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import type { ColumnDef } from '@tanstack/react-table'
 import { TransactionDataTable, type StatusTab, type BulkAction, type OtherFilterOption } from '@/shared/components/common/data-table'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { RotateCcw, CheckCircle, XCircle, Clock, RefreshCcw, List } from 'lucide-react'
+import { RotateCcw, CheckCircle, XCircle, Clock, RefreshCcw, List, Eye } from 'lucide-react'
 
 // Transaction type for sub-account
 interface Transaction {
@@ -109,8 +110,8 @@ const StatusBadge = ({ status }: { status: Transaction['status'] }) => {
     return <Badge className={className}>{label}</Badge>
 }
 
-// Columns definition
-const columns: ColumnDef<Transaction>[] = [
+// Columns definition - function to access navigate
+const getColumns = (onViewDetails: (id: string) => void): ColumnDef<Transaction>[] => [
     {
         accessorKey: 'type',
         header: 'Type',
@@ -177,9 +178,17 @@ const columns: ColumnDef<Transaction>[] = [
     {
         id: 'actions',
         header: '',
-        cell: () => (
-            <Button variant="outline" size="sm" className="gap-1">
-                <span className="text-xs">+</span> Détails
+        cell: ({ row }) => (
+            <Button
+                variant="outline"
+                size="sm"
+                className="gap-1"
+                onClick={(e) => {
+                    e.stopPropagation()
+                    onViewDetails(row.original.id)
+                }}
+            >
+                <Eye className="h-3 w-3" /> Détails
             </Button>
         ),
     },
@@ -216,10 +225,19 @@ const otherFilterOptions: OtherFilterOption[] = [
 ]
 
 export const TransactionsPage = () => {
+    const navigate = useNavigate()
     const [activeStatus, setActiveStatus] = React.useState('all')
     const [currentPage, setCurrentPage] = React.useState(1)
     const [isLoading, setIsLoading] = React.useState(false)
     const [otherFilters, setOtherFilters] = React.useState<Record<string, string>>({})
+
+    // Navigate to transaction details
+    const handleViewDetails = (transactionId: string) => {
+        navigate(`/sub/transactions/${transactionId}`)
+    }
+
+    // Memoize columns with navigate callback
+    const columns = React.useMemo(() => getColumns(handleViewDetails), [])
 
     // Filter transactions by status
     const filteredTransactions = React.useMemo(() => {
