@@ -1,11 +1,7 @@
-// Export components
-export { SubAccountCard, SubAccountStatsCards } from './components'
-
-// Export pages
-export { SubAccountsPage } from './pages/SubAccountsPage'
-
-// Export services
-export { subAccountService } from './services/subAccount.service'
-
-// Export types
-export type { SubAccount, SubAccountStats, SubAccountFilter } from './types'
+// Pages
+export { SubAccountLayoutPage } from './pages/SubAccountLayout'
+export { SubAccountDashboardPage } from './pages/SubAccountDashboardPage'
+export { SubAccountTransactionsPage } from './pages/SubAccountTransactionsPage'
+export { SubAccountClientsPage } from './pages/SubAccountClientsPage'
+export { SubAccountReversementsPage } from './pages/SubAccountReversementsPage'
+export { SubAccountDevelopersPage } from './pages/SubAccountDevelopersPage'

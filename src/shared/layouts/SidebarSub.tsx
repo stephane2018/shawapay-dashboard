@@ -1,6 +1,5 @@
 
 
-import React from 'react';
 import {
     Category,
     ArrowSwapHorizontal,
@@ -24,11 +23,8 @@ interface SidebarProps {
     className?: string;
 }
 
-type SubAccountSection = 'dashboard' | 'transactions' | 'clients' | 'reversements' | 'boutique' | 'direct' | 'developers' | 'settings';
-
 export const SidebarSub = ({ className }: SidebarProps) => {
     const { currentAccount, switchToMainAccount, environment, setEnvironment } = useAccount();
-    const [activeSection, setActiveSection] = React.useState<SubAccountSection>('dashboard');
 
     return (
         <div className={cn("flex flex-col h-full bg-card border-r", className)}>
@@ -107,110 +103,43 @@ export const SidebarSub = ({ className }: SidebarProps) => {
 
             <div className="flex-1 overflow-y-auto px-4 space-y-6">
                 <div className="space-y-1">
-                    <Button 
-                        variant="ghost" 
-                        className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground"
-                        onClick={switchToMainAccount}
-                    >
+                    <Button variant="ghost" className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground">
                         <Category size={16} variant="Bulk" color="currentColor" />
                         Tableau de bord maître
                     </Button>
-                    <Button 
-                        variant={activeSection === 'dashboard' ? "secondary" : "ghost"}
-                        className={cn(
-                            "w-full justify-start gap-3 font-medium",
-                            activeSection === 'dashboard' && "bg-gradient-to-r from-blue-50 to-violet-50 text-violet-600 hover:from-blue-100 hover:to-violet-100"
-                        )}
-                        onClick={() => setActiveSection('dashboard')}
-                    >
+                    <Button variant="secondary" className="w-full justify-start gap-3 font-medium">
                         <Category size={16} variant="Bulk" color="currentColor" />
                         Tableau de bord
                     </Button>
-                    <Button 
-                        variant={activeSection === 'transactions' ? "secondary" : "ghost"}
-                        className={cn(
-                            "w-full justify-start gap-3 font-medium",
-                            activeSection === 'transactions' && "bg-gradient-to-r from-blue-50 to-violet-50 text-violet-600 hover:from-blue-100 hover:to-violet-100"
-                        )}
-                        onClick={() => setActiveSection('transactions')}
-                    >
+                    <Button variant="ghost" className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground">
                         <ArrowSwapHorizontal size={16} variant="Bulk" color="currentColor" />
                         Transactions
                     </Button>
-                    <Button 
-                        variant={activeSection === 'clients' ? "secondary" : "ghost"}
-                        className={cn(
-                            "w-full justify-start gap-3 font-medium",
-                            activeSection === 'clients' && "bg-gradient-to-r from-blue-50 to-violet-50 text-violet-600 hover:from-blue-100 hover:to-violet-100"
-                        )}
-                        onClick={() => setActiveSection('clients')}
-                    >
+                    <Button variant="ghost" className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground">
                         <People size={16} variant="Bulk" color="currentColor" />
                         Clients
                     </Button>
-                    <Button 
-                        variant={activeSection === 'reversements' ? "secondary" : "ghost"}
-                        className={cn(
-                            "w-full justify-start gap-3 font-medium",
-                            activeSection === 'reversements' && "bg-gradient-to-r from-blue-50 to-violet-50 text-violet-600 hover:from-blue-100 hover:to-violet-100"
-                        )}
-                        onClick={() => setActiveSection('reversements')}
-                    >
+                    <Button variant="ghost" className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground">
                         <Wallet2 size={16} variant="Bulk" color="currentColor" />
                         Reversements
                     </Button>
-                    <Button 
-                        variant={activeSection === 'boutique' ? "secondary" : "ghost"}
-                        className={cn(
-                            "w-full justify-start gap-3 font-medium",
-                            activeSection === 'boutique' && "bg-gradient-to-r from-blue-50 to-violet-50 text-violet-600 hover:from-blue-100 hover:to-violet-100"
-                        )}
-                        onClick={() => setActiveSection('boutique')}
-                    >
+                    <Button variant="ghost" className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground">
                         <CardIcon size={16} variant="Bulk" color="currentColor" />
                         Ma boutique
                     </Button>
-                    <Button 
-                        variant={activeSection === 'direct' ? "secondary" : "ghost"}
-                        className={cn(
-                            "w-full justify-start gap-3 font-medium",
-                            activeSection === 'direct' && "bg-gradient-to-r from-blue-50 to-violet-50 text-violet-600 hover:from-blue-100 hover:to-violet-100"
-                        )}
-                        onClick={() => setActiveSection('direct')}
-                    >
+                    <Button variant="ghost" className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground">
                         <Link21 size={16} variant="Bulk" color="currentColor" />
                         KKiaPay Direct
                     </Button>
-                    <Button 
-                        variant={activeSection === 'developers' ? "secondary" : "ghost"}
-                        className={cn(
-                            "w-full justify-start gap-3 font-medium",
-                            activeSection === 'developers' && "bg-gradient-to-r from-blue-50 to-violet-50 text-violet-600 hover:from-blue-100 hover:to-violet-100"
-                        )}
-                        onClick={() => setActiveSection('developers')}
-                    >
+                    <Button variant="ghost" className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground">
                         <Code size={16} variant="Bulk" color="currentColor" />
                         Développeurs
                     </Button>
-                    <Button 
-                        variant={activeSection === 'settings' ? "secondary" : "ghost"}
-                        className={cn(
-                            "w-full justify-start gap-3 font-medium",
-                            activeSection === 'settings' && "bg-gradient-to-r from-blue-50 to-violet-50 text-violet-600 hover:from-blue-100 hover:to-violet-100"
-                        )}
-                        onClick={() => setActiveSection('settings')}
-                    >
+                    <Button variant="ghost" className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground">
                         <Setting2 size={16} variant="Bulk" color="currentColor" />
                         Paramètres
                     </Button>
-                    <Button 
-                        variant="ghost" 
-                        className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20"
-                        onClick={() => {
-                            // Handle logout
-                            console.log('Logout clicked');
-                        }}
-                    >
+                    <Button variant="ghost" className="w-full justify-start gap-3 font-medium text-muted-foreground hover:text-foreground text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20">
                         <Logout size={16} variant="Bulk" color="currentColor" />
                         Déconnexion
                     </Button>
