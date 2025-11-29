@@ -56,8 +56,8 @@ export function LoginForm({
                     Shawapay
                   </h1>
                 </div>
-                <h1 className="text-2xl font-bold">Bienvenue</h1>
-                <p className="text-balance text-muted-foreground">
+                <h1 className="text-2xl font-bold dark:text-white">Bienvenue</h1>
+                <p className="text-balance text-muted-foreground dark:text-slate-400">
                   Connectez-vous à votre compte
                 </p>
               </div>
@@ -120,8 +120,8 @@ export function LoginForm({
               >
                 {isLoading ? "Connexion..." : "Se connecter"}
               </Button>
-              <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-                <span className="relative z-10 bg-background px-2 text-muted-foreground">
+              <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border dark:after:border-slate-700">
+                <span className="relative z-10 bg-background dark:bg-slate-900 px-2 text-muted-foreground dark:text-slate-400">
                   Ou continuer avec
                 </span>
               </div>
@@ -145,9 +145,9 @@ export function LoginForm({
                   GitHub
                 </Button>
               </div>
-              <div className="text-center text-sm">
+              <div className="text-center text-sm dark:text-slate-400">
                 Pas encore de compte?{" "}
-                <a href="/register" className="underline underline-offset-4 font-medium text-blue-600 hover:text-blue-700">
+                <a href="/register" className="underline underline-offset-4 font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
                   S'inscrire
                 </a>
               </div>
