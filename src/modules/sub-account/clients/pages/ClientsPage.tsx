@@ -6,13 +6,24 @@ import { TransactionDataTable, type StatusTab } from '@/shared/components/common
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
-import { More, Sms, Call, Edit, Trash, UserCheck, UserClose, Clock, People } from 'iconsax-react'
+import {
+    More,
+    Sms,
+    Call,
+    Edit,
+    Trash,
+
+    Clock,
+    People,
+    CloseCircle,
+} from 'iconsax-react'
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu'
+import { UserCheck } from 'lucide-react'
 
 // Client type
 interface Client {
@@ -176,8 +187,8 @@ const columns: ColumnDef<Client>[] = [
 
 // Status tabs
 const statusTabs: StatusTab[] = [
-    { value: 'active', label: 'Actifs', icon: <UserCheck size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
-    { value: 'inactive', label: 'Inactifs', icon: <UserClose size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
+    { value: 'active', label: 'Actifs', icon: <UserCheck size={16} color="currentColor" className="text-primary" /> },
+    { value: 'inactive', label: 'Inactifs', icon: <CloseCircle size={16} color="currentColor" className="text-primary" /> },
     { value: 'pending', label: 'En attente', icon: <Clock size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
     { value: 'all', label: 'Tous', icon: <People size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
 ]

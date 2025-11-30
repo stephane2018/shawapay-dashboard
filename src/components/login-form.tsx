@@ -49,18 +49,13 @@ export function LoginForm({
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                    S
-                  </div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
-                    Shawapay
-                  </h1>
+                    <img src="/shawapay-logo.svg" alt="Shawapay" className="w-20 h-20 rounded-full border-2 border-muted" />
                 </div>
                 <h1 className="text-2xl font-bold dark:text-white">Bienvenue</h1>
                 <p className="text-balance text-muted-foreground dark:text-slate-400">
                   Connectez-vous à votre compte
                 </p>
-              </div>
+              </div> 
 
               {error && (
                 <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">

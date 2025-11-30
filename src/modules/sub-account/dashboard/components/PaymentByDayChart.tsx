@@ -1,6 +1,6 @@
 'use client';
 
-import { TrendingUp } from 'iconsax-react';
+import { TrendUp } from 'iconsax-react';
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from 'recharts';
 
 import {
@@ -76,7 +76,7 @@ export const PaymentByDayChart = () => {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Trending up by 5.2% this month <TrendUp className="h-4 w-4" />
         </div>
         <div className="text-muted-foreground leading-none">
           Showing total payments for the last 7 days

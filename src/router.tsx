@@ -12,6 +12,7 @@ import { SubscriptionsPage } from '@/modules/main-account/abonnements';
 import { RewardsPage } from '@/modules/main-account/recompenses';
 
 // Sub-Account Pages
+import { DashboardPage as SubDashboardPage } from '@/modules/sub-account/dashboard';
 import { TransactionsPage as SubTransactionsPage, TransactionDetailPage } from '@/modules/sub-account/transactions';
 import { ClientsPage } from '@/modules/sub-account/clients';
 import { StorePage } from '@/modules/sub-account/ma-boutique';
@@ -82,7 +83,7 @@ export const router = createBrowserRouter([
                 children: [
                     {
                         path: 'dashboard',
-                        element: <SubTransactionsPage /> // Mapping dashboard to transactions for now as per previous logic
+                        element: <SubDashboardPage />
                     },
                     {
                         path: 'transactions',

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type {
   AccountContextType,
   MainAccount,
@@ -82,7 +83,8 @@ const mockMainAccount: MainAccount = {
   ]
 };
 
-export const AccountProvider = ({ children }: { children: ReactNode }) => {
+const AccountProviderContent = ({ children }: { children: ReactNode }) => {
+  const navigate = useNavigate();
   const [mainAccount] = useState<MainAccount>(mockMainAccount);
 
   // Initialize from localStorage if available
@@ -106,6 +108,7 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
   const switchToMainAccount = () => {
     setCurrentAccount(mainAccount);
     localStorage.setItem('shawapay_active_account_id', mainAccount.id);
+    navigate('/main/dashboard');
   };
 
   const switchToSubAccount = (subAccountId: string) => {
@@ -117,6 +120,9 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
       // Synchroniser l'environnement avec celui du sous-compte
       setEnvironment(subAccount.environment);
       localStorage.setItem('shawapay_environment', subAccount.environment);
+      
+      // Redirect to sub-account dashboard
+      navigate('/sub/dashboard');
     }
   };
 
@@ -141,6 +147,14 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
     <AccountContext.Provider value={value}>
       {children}
     </AccountContext.Provider>
+  );
+};
+
+export const AccountProvider = ({ children }: { children: ReactNode }) => {
+  return (
+    <AccountProviderContent>
+      {children}
+    </AccountProviderContent>
   );
 };
 

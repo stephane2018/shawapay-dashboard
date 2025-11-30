@@ -23,9 +23,7 @@ export const SidebarMain = ({ className }: SidebarProps) => {
         <div className={cn("flex flex-col h-full bg-card border-r", className)}>
             <div className="p-6">
                 <div className="flex items-center gap-2 font-bold text-2xl text-primary">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center text-white">
-                        S
-                    </div>
+                    <img src="/shawapay-logo.svg" alt="Shawapay" className="w-8 h-8 rounded-lg" />
                     Shawapay
                 </div>
             </div>

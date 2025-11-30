@@ -12,7 +12,12 @@ import {
     Eye,
     EyeOff,
     AlertCircle,
-    Terminal
+    Terminal,
+    Key,
+    CheckCircle,
+    RefreshCw,
+    Book,
+    Code
 } from 'lucide-react'
 import { TickCircle, RefreshCircle } from 'iconsax-react'
 

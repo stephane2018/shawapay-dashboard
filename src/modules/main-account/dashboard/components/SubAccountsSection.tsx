@@ -2,11 +2,17 @@ import React from 'react';
 import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/shared/ui/tabs';
-import { Add, ArrowRight, Layer } from 'iconsax-react';
-import { Settings, CreditCard, Smartphone, Zap } from 'lucide-react';
+import {
+  Add,
+  ArrowRight,
+  Layer,
+  Settings,
+  Mobile,
+} from 'iconsax-react';
 import { useAccount } from '@/core/contexts/AccountContext';
 import type { SubAccount } from '@/core/types/account.types';
 import { cn } from '@/lib/utils';
+import { Card } from 'iconsax-reactjs';
 
 interface SubAccountCardProps {
   subAccount: SubAccount;
@@ -32,6 +38,8 @@ const SubAccountCard = ({ subAccount, onAccess, isActive }: SubAccountCardProps)
     return icons[type] || '📊';
   };
 
+
+  
   return (
     <div
       className={cn(
@@ -111,9 +119,9 @@ export const SubAccountsSection = () => {
 
   const tabs = [
     { label: 'Intégration', value: 'Intégration', icon: Settings },
-    { label: 'Terminal de paiement', value: 'Terminal de paiement', icon: CreditCard },
-    { label: 'Application mobile', value: 'Application mobile', icon: Smartphone },
-    { label: 'Chap Chap', value: 'Chap Chap', icon: Zap }
+    { label: 'Terminal de paiement', value: 'Terminal de paiement', icon: Card },
+    { label: 'Application mobile', value: 'Application mobile', icon: Mobile },
+    { label: 'Chap Chap', value: 'Chap Chap', icon:  Card}
   ];
 
   const [activeType, setActiveType] = React.useState<string>('Intégration');

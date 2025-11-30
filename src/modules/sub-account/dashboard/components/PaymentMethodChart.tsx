@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { TrendingUp } from 'iconsax-react';
+import { TrendUp } from 'iconsax-react';
 import { Pie, PieChart, Sector } from 'recharts';
 import type { PieSectorDataItem } from 'recharts/types/polar/Pie';
 
@@ -88,7 +88,7 @@ export const PaymentMethodChart = () => {
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Trending up by 5.2% this month <TrendUp className="h-4 w-4" />
         </div>
         <div className="text-muted-foreground leading-none">
           Showing payment methods for the last 30 days

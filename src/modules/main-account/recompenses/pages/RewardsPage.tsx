@@ -5,7 +5,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { TransactionDataTable, type StatusTab } from '@/shared/components/common/data-table'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { Gift, Trophy, Star, Zap, TickCircle, Clock, CloseCircle, Category } from 'iconsax-react'
+import { Gift, Award, Star, Flash, TickCircle, Clock, CloseCircle, Category } from 'iconsax-react'
 
 // Reward type
 interface Reward {
@@ -90,9 +90,9 @@ const StatusBadge = ({ status }: { status: Reward['status'] }) => {
 const TypeIcon = ({ type }: { type: Reward['type'] }) => {
   const icons = {
     cashback: <Gift size={20} variant="Bulk" color="currentColor" className="text-green-600" />,
-    bonus: <Trophy size={20} variant="Bulk" color="currentColor" className="text-amber-600" />,
+    bonus: <Award size={20} variant="Bulk" color="currentColor" className="text-amber-600" />,
     points: <Star size={20} variant="Bulk" color="currentColor" className="text-purple-600" />,
-    discount: <Zap size={20} variant="Bulk" color="currentColor" className="text-blue-600" />,
+    discount: <Flash size={20} variant="Bulk" color="currentColor" className="text-blue-600" />,
   }
   return icons[type]
 }
