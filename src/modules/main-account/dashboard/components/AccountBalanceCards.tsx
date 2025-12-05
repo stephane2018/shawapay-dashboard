@@ -157,7 +157,7 @@ export const AccountBalanceCards = ({ balance, className }: AccountBalanceCardsP
             key={index}
             className={cn(
               'group relative overflow-hidden rounded-2xl border border-border/40 shadow-sm backdrop-blur',
-              item.cardBg
+             
             )}
           >
             <div className={cn('pointer-events-none absolute inset-0 opacity-70 blur-3xl', item.glow)} />
@@ -195,9 +195,7 @@ export const AccountBalanceCards = ({ balance, className }: AccountBalanceCardsP
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={cn('whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-medium border', item.badge)}>
-                    {item.helper}
-                  </span>
+                 
                   <Button
                     type="button"
                     variant="ghost"

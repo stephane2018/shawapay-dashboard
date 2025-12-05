@@ -6,6 +6,7 @@ import App from '@/App'
 
 // Main Account Pages
 import { DashboardPage } from '@/modules/main-account/dashboard';
+import { SubAccountsPage } from '@/modules/main-account/sous-comptes';
 import { TransactionsPage } from '@/modules/main-account/mes-transactions';
 import { UsersPage } from '@/modules/main-account/utilisateurs';
 import { SubscriptionsPage } from '@/modules/main-account/abonnements';
@@ -54,6 +55,10 @@ export const router = createBrowserRouter([
                     {
                         path: 'dashboard',
                         element: <DashboardPage />
+                    },
+                    {
+                        path: 'sub-accounts',
+                        element: <SubAccountsPage />
                     },
                     {
                         path: 'transactions',

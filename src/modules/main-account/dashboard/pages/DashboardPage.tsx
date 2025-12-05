@@ -11,6 +11,10 @@ import {
 } from "@/shared/ui/dropdown-menu";
 import { AccountBalanceCards } from '../components/AccountBalanceCards';
 import { SubAccountsSection } from '../components/SubAccountsSection';
+import { TransactionStatsCard } from '../components/TransactionStatsCard';
+import { QuickTransfer } from '../components/QuickTransfer';
+import { ActivitySection } from '../components/ActivitySection';
+import { TransactionFlowChart } from '../components/TransactionFlowChart';
 import { useAccount } from '@/core/contexts/AccountContext';
 
 
@@ -29,26 +33,25 @@ export const DashboardPage = () => {
                         Vue d'ensemble de votre compte principal et sous-comptes
                     </p>
                 </div>
-                <div className="flex items-center gap-2">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm">This Month <TrendDown size={16} variant="Bulk" color="currentColor" className="ml-2" /></Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem>This Week</DropdownMenuItem>
-                            <DropdownMenuItem>This Month</DropdownMenuItem>
-                            <DropdownMenuItem>This Year</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    <Button variant="outline" size="sm">Reset Data</Button>
-                </div>
+              
             </div>
 
             {/* Account Balance Cards */}
             <AccountBalanceCards balance={currentAccount.balance} />
 
-            {/* Sub Accounts Section */}
-            <SubAccountsSection />
+            {/* Transaction Stats Card */}
+            <TransactionStatsCard />
+
+            {/* Quick Transfer & Activity Section */}
+            <div className="grid gap-6 lg:grid-cols-2">
+                <QuickTransfer balance={currentAccount.balance.availableBalance} currency={currentAccount.balance.currency} />
+                <ActivitySection />
+            </div>
+
+            {/* Transaction Flow Chart */}
+            <TransactionFlowChart />
+
+           
         </div>
     );
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/shared/ui/tabs';
@@ -160,10 +161,18 @@ export const SubAccountsSection = () => {
             </p>
           </div>
         </div>
-        <Button variant="outline" size="sm" className="gap-2">
-          <Add size={16} variant="Bulk" color="currentColor" />
-          Créer un sous-compte
-        </Button>
+        <div className="flex items-center gap-2">
+          <Link to="/main/sub-accounts">
+            <Button variant="ghost" size="sm" className="gap-2">
+              Voir tout
+              <ArrowRight size={16} variant="Bulk" color="currentColor" />
+            </Button>
+          </Link>
+          <Button variant="outline" size="sm" className="gap-2">
+            <Add size={16} variant="Bulk" color="currentColor" />
+            Créer un sous-compte
+          </Button>
+        </div>
       </div>
       <div className="space-y-6 px-6 py-6">
         {mainAccount.subAccounts.length > 0 && (

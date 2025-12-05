@@ -21,9 +21,14 @@ export interface NavItem {
 
 export const mainAccountNav: NavItem[] = [
     {
+        label: 'Tableau de bord',
+        icon: Category,
+        path: '/main/dashboard',
+    },
+    {
         label: 'Mes sous-comptes',
         icon: Layer,
-        path: '/main/dashboard',
+        path: '/main/sub-accounts',
     },
     {
         label: 'Mes transactions',
@@ -77,20 +82,11 @@ export const subAccountNav: NavItem[] = [
         path: '/sub/clients',
     },
     {
-        label: 'Reversements',
-        icon: Wallet2,
-        path: '/sub/payouts',
-    },
-    {
         label: 'Ma boutique',
         icon: CardIcon,
         path: '/sub/store',
     },
-    {
-        label: 'KKiaPay Direct',
-        icon: Link21,
-        path: '/sub/kkiapay-direct',
-    },
+    
     {
         label: 'Développeurs',
         icon: Code,
