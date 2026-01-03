@@ -2,7 +2,9 @@
 export type MainAccountRoute =
     | 'dashboard'
     | 'mes-transactions'
-    | 'utilisateurs'
+    | 'clients'
+    | 'backoffice-users'
+    | 'api-clients'
     | 'abonnements'
     | 'recompenses';
 
@@ -32,10 +34,20 @@ export const MAIN_ACCOUNT_ROUTES: Record<MainAccountRoute, RouteConfig> = {
         label: 'Mes Transactions',
         icon: 'Receipt',
     },
-    utilisateurs: {
-        path: '/utilisateurs',
-        label: 'Utilisateurs',
+    clients: {
+        path: '/clients',
+        label: 'Clients',
         icon: 'Users',
+    },
+    'backoffice-users': {
+        path: '/backoffice-users',
+        label: 'Utilisateurs Backoffice',
+        icon: 'UserOctagon',
+    },
+    'api-clients': {
+        path: '/api-clients',
+        label: 'Clients API',
+        icon: 'Code',
     },
     abonnements: {
         path: '/abonnements',

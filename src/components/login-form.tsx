@@ -8,37 +8,23 @@ import { Input } from "@/shared/ui/input"
 import { Label } from "@/shared/ui/label"
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
-import { useAuth } from "@/core/contexts/AuthContext"
-import { useNavigate } from "react-router-dom"
 import { AnimatedBackground } from "@/shared/ui/animated-background"
 import { TextSlider } from "@/shared/ui/text-slider"
+import { useLoginMutation } from "@/core/hooks/use-auth-mutation"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
   const [showPassword, setShowPassword] = useState(false)
-  const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
 
-  const { login } = useAuth()
-  const navigate = useNavigate()
+  const loginMutation = useLoginMutation()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError("")
-    setIsLoading(true)
-
-    try {
-      await login(email, password)
-      navigate("/")
-    } catch (err) {
-      setError("Email ou mot de passe incorrect")
-    } finally {
-      setIsLoading(false)
-    }
+    loginMutation.mutate({ username, password })
   }
 
   return (
@@ -49,28 +35,30 @@ export function LoginForm({
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <div className="flex items-center gap-2 mb-2">
-                    <img src="/shawapay-logo.svg" alt="Shawapay" className="w-20 h-20 rounded-full border-2 border-muted" />
+                  <img src="/shawapay-logo.svg" alt="Shawapay" className="w-20 h-20 rounded-full border-2 border-muted" />
                 </div>
                 <h1 className="text-2xl font-bold dark:text-white">Bienvenue</h1>
                 <p className="text-balance text-muted-foreground dark:text-slate-400">
                   Connectez-vous à votre compte
                 </p>
-              </div> 
+              </div>
 
-              {error && (
+              {loginMutation.isError && (
                 <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-                  <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                  <p className="text-sm text-red-600 dark:text-red-400">
+                    {(loginMutation.error as any)?.message || "Nom d'utilisateur ou mot de passe incorrect"}
+                  </p>
                 </div>
               )}
 
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="username">Nom d'utilisateur</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="nom@exemple.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="username"
+                  type="text"
+                  placeholder="nom d'utilisateur"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>
@@ -111,9 +99,9 @@ export function LoginForm({
               <Button
                 type="submit"
                 className="w-full bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700"
-                disabled={isLoading}
+                disabled={loginMutation.isPending}
               >
-                {isLoading ? "Connexion..." : "Se connecter"}
+                {loginMutation.isPending ? "Connexion..." : "Se connecter"}
               </Button>
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border dark:after:border-slate-700">
                 <span className="relative z-10 bg-background dark:bg-slate-900 px-2 text-muted-foreground dark:text-slate-400">

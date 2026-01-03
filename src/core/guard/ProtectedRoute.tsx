@@ -1,15 +1,22 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
-import { useAuth } from '@/core/contexts/AuthContext'
+import { tokenManager } from '@/core/lib/token-manager./token-manager'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth()
+  const [isChecking, setIsChecking] = useState(true)
+  const [hasToken, setHasToken] = useState(false)
 
-  if (isLoading) {
+  useEffect(() => {
+    const tokenExists = tokenManager.hasToken()
+    setHasToken(tokenExists)
+    setIsChecking(false)
+  }, [])
+
+  if (isChecking) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-violet-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
         <div className="flex flex-col items-center gap-4">
@@ -22,7 +29,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     )
   }
 
-  if (!isAuthenticated) {
+  if (!hasToken) {
     return <Navigate to="/login" replace />
   }
 

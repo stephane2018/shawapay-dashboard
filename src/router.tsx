@@ -8,7 +8,9 @@ import App from '@/App'
 import { DashboardPage } from '@/modules/main-account/dashboard';
 import { SubAccountsPage } from '@/modules/main-account/sous-comptes';
 import { TransactionsPage } from '@/modules/main-account/mes-transactions';
-import { UsersPage } from '@/modules/main-account/utilisateurs';
+import { ClientsPage as MainClientsPage } from '@/modules/main-account/clients';
+import { BackofficeUsersPage } from '@/modules/main-account/utilisateurs-backoffice';
+import { ApiClientsPage } from '@/modules/main-account/clients-api';
 import { SubscriptionsPage } from '@/modules/main-account/abonnements';
 import { RewardsPage } from '@/modules/main-account/recompenses';
 
@@ -65,8 +67,16 @@ export const router = createBrowserRouter([
                         element: <TransactionsPage />
                     },
                     {
-                        path: 'users',
-                        element: <UsersPage />
+                        path: 'clients',
+                        element: <MainClientsPage />
+                    },
+                    {
+                        path: 'backoffice-users',
+                        element: <BackofficeUsersPage />
+                    },
+                    {
+                        path: 'api-clients',
+                        element: <ApiClientsPage />
                     },
                     {
                         path: 'subscriptions',
@@ -75,7 +85,7 @@ export const router = createBrowserRouter([
                     {
                         path: 'rewards',
                         element: <RewardsPage />
-                    },
+                    }, 
                     {
                         path: '*',
                         element: <Navigate to="/main/dashboard" replace />

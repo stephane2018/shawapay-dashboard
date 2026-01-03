@@ -1,376 +1,156 @@
 'use client'
 
 import React from 'react'
-import type { ColumnDef } from '@tanstack/react-table'
-import { TransactionDataTable, type StatusTab, type BulkAction, type OtherFilterOption } from '@/shared/components/common/data-table'
-import { Badge } from '@/shared/ui/badge'
+import type { BulkAction } from '@/shared/components/common/data-table'
+import { TransactionDataTable } from '@/shared/components/common/data-table'
 import { Button } from '@/shared/ui/button'
-import { TickCircle, CloseCircle, Clock, RefreshCircle, Category, RotateLeft } from 'iconsax-react'
+import { Copy } from 'iconsax-react'
+import { useTransactions } from '@/core/hooks/use-transactions'
+import type { Transaction } from '@/core/types/transaction.types'
+import { toast } from 'sonner'
+import {
+  transactionColumns,
+  type TransactionDisplay,
+  statusTabs,
+  StatisticsCards,
+} from '../components'
 
-// Transaction type
-interface Transaction {
-  id: string
-  type: 'debit' | 'credit'
-  status: 'success' | 'failed' | 'pending' | 'refunded'
-  source: string
-  clientName: string
-  clientId: string
-  reference: string
-  amount: number
-  fees: number
-  revenue: number
-  date: string
-  time: string
-}
-
-// Mock data
-const mockTransactions: Transaction[] = [
-  {
-    id: '1',
-    type: 'debit',
-    status: 'success',
-    source: 'Mobile Money',
-    clientName: 'undefined Hbjkj',
-    clientId: '2256057710000',
-    reference: 'gZLNsiO5x',
-    amount: 2514,
-    fees: 60,
-    revenue: 0,
-    date: 'November 17 - 2025',
-    time: '10:08 AM',
-  },
-  {
-    id: '2',
-    type: 'debit',
-    status: 'success',
-    source: 'Mobile Money',
-    clientName: 'undefined Hhf',
-    clientId: '2256057710000',
-    reference: 'MfpncPKm4',
-    amount: 1005,
-    fees: 24,
-    revenue: 0,
-    date: 'November 17 - 2025',
-    time: '7:50 AM',
-  },
-  {
-    id: '3',
-    type: 'debit',
-    status: 'success',
-    source: 'Mobile Money',
-    clientName: 'undefined Jhjj',
-    clientId: '2256057710000',
-    reference: 'x7l_nC8N',
-    amount: 1005,
-    fees: 24,
-    revenue: 0,
-    date: 'November 17 - 2025',
-    time: '6:48 AM',
-  },
-  {
-    id: '4',
-    type: 'debit',
-    status: 'success',
-    source: 'Mobile Money',
-    clientName: 'KOUADIO Jean',
-    clientId: '2256057710000',
-    reference: 'L_aMQM1nh',
-    amount: 32691,
-    fees: 785,
-    revenue: 0,
-    date: 'November 13 - 2025',
-    time: '7:58 PM',
-  },
-  {
-    id: '5',
-    type: 'debit',
-    status: 'success',
-    source: 'Card',
-    clientName: 'Jean',
-    clientId: 'kMwYPugCb',
-    reference: 'kMwYPugCb',
-    amount: 201176,
-    fees: 8047,
-    revenue: 0,
-    date: 'November 13 - 2025',
-    time: '7:53 PM',
-  },
-  {
-    id: '6',
-    type: 'debit',
-    status: 'success',
-    source: 'Mobile Money',
-    clientName: 'KOUADIO Jean',
-    clientId: '2256057710000',
-    reference: 'phJJ-nC-v',
-    amount: 40235,
-    fees: 966,
-    revenue: 0,
-    date: 'November 13 - 2025',
-    time: '7:47 PM',
-  },
-  {
-    id: '7',
-    type: 'debit',
-    status: 'success',
-    source: 'Mobile Money',
-    clientName: 'KOUADIO Jean',
-    clientId: '2256057710000',
-    reference: 'n5pTjMbt',
-    amount: 100588,
-    fees: 2414,
-    revenue: 0,
-    date: 'November 12 - 2025',
-    time: '8:35 PM',
-  },
-  {
-    id: '8',
-    type: 'debit',
-    status: 'success',
-    source: 'Mobile Money',
-    clientName: 'KOUADIO Jean',
-    clientId: '2256057710000',
-    reference: 'kmB6Fwa35',
-    amount: 201176,
-    fees: 4828,
-    revenue: 0,
-    date: 'November 12 - 2025',
-    time: '8:17 PM',
-  },
-  {
-    id: '9',
-    type: 'debit',
-    status: 'success',
-    source: 'Mobile Money',
-    clientName: 'KOUADIO Jean',
-    clientId: '2256057710000',
-    reference: 'wFeL1J4N_',
-    amount: 5029,
-    fees: 121,
-    revenue: 0,
-    date: 'November 12 - 2025',
-    time: '8:00 PM',
-  },
-  {
-    id: '10',
-    type: 'debit',
-    status: 'pending',
-    source: 'Mobile Money',
-    clientName: 'Test User',
-    clientId: '2256057710001',
-    reference: 'abc123xyz',
-    amount: 15000,
-    fees: 360,
-    revenue: 0,
-    date: 'November 11 - 2025',
-    time: '3:30 PM',
-  },
-]
-
-// Status badge component
-const StatusBadge = ({ status }: { status: Transaction['status'] }) => {
-  const config = {
-    success: { label: 'Succès', className: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' },
-    failed: { label: 'Échec', className: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' },
-    pending: { label: 'En attente', className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' },
-    refunded: { label: 'Remboursé', className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' },
-  }
-  const { label, className } = config[status]
-  return <Badge className={className}>{label}</Badge>
-}
-
-// Columns definition
-const columns: ColumnDef<Transaction>[] = [
-  {
-    accessorKey: 'type',
-    header: 'Type',
-    cell: ({ row }) => (
-      <span className="text-sm font-medium text-muted-foreground">{row.original.type}</span>
-    ),
-  },
-  {
-    accessorKey: 'status',
-    header: 'Statut',
-    cell: ({ row }) => <StatusBadge status={row.original.status} />,
-  },
-  {
-    accessorKey: 'source',
-    header: 'Source',
-    cell: ({ row }) => <span className="text-sm">{row.original.source}</span>,
-  },
-  {
-    accessorKey: 'client',
-    header: 'Client',
-    cell: ({ row }) => (
-      <div>
-        <p className="text-sm font-medium">{row.original.clientName}</p>
-        <p className="text-xs text-muted-foreground">{row.original.clientId}</p>
-      </div>
-    ),
-  },
-  {
-    accessorKey: 'reference',
-    header: 'Référence',
-    cell: ({ row }) => <span className="text-sm font-mono">{row.original.reference}</span>,
-  },
-  {
-    accessorKey: 'amount',
-    header: 'Montant',
-    cell: ({ row }) => (
-      <span className="text-sm font-medium">{row.original.amount.toLocaleString('fr-FR')} XOF</span>
-    ),
-  },
-  {
-    accessorKey: 'fees',
-    header: 'Frais',
-    cell: ({ row }) => (
-      <span className="text-sm text-muted-foreground">{row.original.fees.toLocaleString('fr-FR')} XOF</span>
-    ),
-  },
-  {
-    accessorKey: 'revenue',
-    header: 'Revenu',
-    cell: ({ row }) => <span className="text-sm">#</span>,
-  },
-  {
-    accessorKey: 'date',
-    header: 'Date',
-    cell: ({ row }) => (
-      <div>
-        <p className="text-sm">{row.original.date}</p>
-        <p className="text-xs text-muted-foreground">{row.original.time}</p>
-      </div>
-    ),
-  },
-  {
-    id: 'actions',
-    header: '',
-    cell: () => (
-      <Button variant="outline" size="sm" className="gap-1">
-        <span className="text-xs">+</span> Détails
-      </Button>
-    ),
-  },
-]
-
-// Status tabs
-const statusTabs: StatusTab[] = [
-  { value: 'success', label: 'Succès', icon: <TickCircle size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
-  { value: 'failed', label: 'Échec', icon: <CloseCircle size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
-  { value: 'pending', label: 'En attente', icon: <Clock size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
-  { value: 'refunded', label: 'Remboursé', icon: <RefreshCircle size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
-  { value: 'all', label: 'Tout', icon: <Category size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
-]
-
-// Other filter options for transactions
-const otherFilterOptions: OtherFilterOption[] = [
-  {
-    id: 'type',
-    label: 'Type',
-    options: [
-      { value: 'debit', label: 'Débit' },
-      { value: 'credit', label: 'Crédit' },
-    ],
-  },
-  {
-    id: 'source',
-    label: 'Source',
-    options: [
-      { value: 'mobile_money', label: 'Mobile Money' },
-      { value: 'card', label: 'Carte bancaire' },
-      { value: 'bank_transfer', label: 'Virement bancaire' },
-    ],
-  },
-  {
-    id: 'amount_range',
-    label: 'Montant',
-    options: [
-      { value: '0-10000', label: '0 - 10 000 XOF' },
-      { value: '10000-50000', label: '10 000 - 50 000 XOF' },
-      { value: '50000-100000', label: '50 000 - 100 000 XOF' },
-      { value: '100000+', label: '+ 100 000 XOF' },
-    ],
-  },
-]
+// Helper function to map transaction to display format
+const mapTransactionToDisplay = (transaction: Transaction): TransactionDisplay => ({
+  id: transaction.id,
+  type: transaction.type,
+  amount: transaction.amount,
+  accountType: transaction.accountType,
+  createdAt: new Date(transaction.createdAt).toLocaleString('fr-FR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }),
+  userId: transaction.userId,
+})
 
 export const TransactionsPage = () => {
   const [activeStatus, setActiveStatus] = React.useState('all')
   const [currentPage, setCurrentPage] = React.useState(1)
-  const [isLoading, setIsLoading] = React.useState(false)
-  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>()
-  const [dateRange, setDateRange] = React.useState<{ from?: Date; to?: Date } | undefined>()
-  const [otherFilters, setOtherFilters] = React.useState<Record<string, string>>({})
+  const pageSize = 10
 
-  // Filter transactions by status
+  // Fetch transactions from API
+  const { data, isLoading, isError, error } = useTransactions({
+    page: currentPage - 1,
+    size: pageSize,
+    sort: 'createdAt,desc',
+  })
+
+  // Map transactions to display format
+  const transactions = React.useMemo(() => {
+    if (!data?.content) return []
+    return data.content.map(mapTransactionToDisplay)
+  }, [data])
+
+  // Filter transactions by type
   const filteredTransactions = React.useMemo(() => {
-    let result = mockTransactions
+    if (activeStatus === 'all') return transactions
+    return transactions.filter((t) => t.type === activeStatus)
+  }, [transactions, activeStatus])
 
-    // Filter by status
-    if (activeStatus !== 'all') {
-      result = result.filter((t) => t.status === activeStatus)
+  // Reset to page 1 when status filter changes
+  React.useEffect(() => {
+    setCurrentPage(1)
+  }, [activeStatus])
+
+  // Pagination info
+  const paginationInfo = React.useMemo(() => {
+    if (!data) return { totalElements: 0, totalPages: 0, numberOfElements: 0, currentPage: 0 }
+    return {
+      totalElements: data.totalElements,
+      totalPages: data.totalPages,
+      numberOfElements: data.numberOfElements,
+      currentPage: data.number + 1,
     }
+  }, [data])
 
-    // Filter by type (from other filters)
-    if (otherFilters.type) {
-      result = result.filter((t) => t.type === otherFilters.type)
-    }
+  // Calculate statistics
+  const stats = React.useMemo(() => {
+    const totalCredit = transactions
+      .filter(t => t.type === 'CREDIT' || t.amount > 0)
+      .reduce((sum, t) => sum + Math.abs(t.amount), 0)
 
-    // Filter by source (from other filters)
-    if (otherFilters.source) {
-      const sourceMap: Record<string, string> = {
-        mobile_money: 'Mobile Money',
-        card: 'Card',
-        bank_transfer: 'Bank Transfer',
-      }
-      result = result.filter((t) => t.source === sourceMap[otherFilters.source])
-    }
+    const totalDebit = transactions
+      .filter(t => t.type === 'DEBIT' || t.amount < 0)
+      .reduce((sum, t) => sum + Math.abs(t.amount), 0)
 
-    return result
-  }, [activeStatus, otherFilters])
+    return { totalCredit, totalDebit, balance: totalCredit - totalDebit }
+  }, [transactions])
 
   // Bulk actions
   const bulkActions: BulkAction[] = [
     {
-      label: 'Rembourser',
-      icon: <RotateLeft size={16} variant="Bulk" color="currentColor" className="text-primary" />,
+      label: 'Exporter sélection',
+      icon: <Copy size={16} variant="Bulk" color="currentColor" className="text-primary" />,
       onClick: (rows) => {
-        console.log('Refunding:', rows)
+        toast.success(`${rows.length} transaction(s) exportée(s)`)
       },
       variant: 'outline',
     },
   ]
 
   const handleDownload = () => {
-    console.log('Downloading transactions...')
+    toast.success('Téléchargement des transactions...')
   }
 
-  const handleDateFilterChange = (date: Date | undefined) => {
-    setSelectedDate(date)
-    console.log('Date filter:', date)
-  }
-
-  const handlePeriodFilterChange = (range: { from?: Date; to?: Date } | undefined) => {
-    setDateRange(range)
-    console.log('Period filter:', range)
-  }
-
-  const handleOtherFiltersChange = (filters: Record<string, string>) => {
-    setOtherFilters(filters)
-    console.log('Other filters:', filters)
+  // Show error state
+  if (isError) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">Transactions</h2>
+            <p className="text-muted-foreground">
+              Gérez et suivez toutes vos transactions
+            </p>
+          </div>
+        </div>
+        <div className="p-8 text-center border rounded-lg bg-red-50 dark:bg-red-900/20">
+          <p className="text-red-600 dark:text-red-400">
+            Erreur lors du chargement des transactions: {(error as any)?.message || 'Erreur inconnue'}
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">Transactions</h2>
-        <p className="text-muted-foreground">
-          Gérez et suivez toutes vos transactions
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">Transactions</h2>
+          <p className="text-muted-foreground">
+            {paginationInfo.totalElements} transaction{paginationInfo.totalElements > 1 ? 's' : ''} au total
+            {paginationInfo.numberOfElements > 0 && (
+              <> • Affichage de {paginationInfo.numberOfElements} sur cette page</>
+            )}
+          </p>
+        </div>
+        <Button
+          onClick={handleDownload}
+          className="bg-gradient-to-r from-blue-600 to-violet-600 text-white"
+        >
+          Télécharger
+        </Button>
       </div>
+
+      {/* Statistics Cards */}
+      <StatisticsCards
+        totalCredit={stats.totalCredit}
+        totalDebit={stats.totalDebit}
+        balance={stats.balance}
+      />
 
       <TransactionDataTable
         data={filteredTransactions}
-        columns={columns}
+        columns={transactionColumns}
         isLoading={isLoading}
         statusTabs={statusTabs}
         activeStatus={activeStatus}
@@ -378,17 +158,13 @@ export const TransactionsPage = () => {
         filterConfig={{
           dateFilter: true,
           periodFilter: true,
-          otherFilters: true,
-          searchPlaceholder: 'Rechercher',
+          otherFilters: false,
+          searchPlaceholder: 'Rechercher par ID',
         }}
-        onDateFilterChange={handleDateFilterChange}
-        onPeriodFilterChange={handlePeriodFilterChange}
-        onOtherFiltersChange={handleOtherFiltersChange}
-        otherFilterOptions={otherFilterOptions}
         onDownload={handleDownload}
         bulkActions={bulkActions}
-        pageSize={10}
-        totalCount={filteredTransactions.length}
+        pageSize={pageSize}
+        totalCount={paginationInfo.totalElements}
         currentPage={currentPage}
         onPageChange={setCurrentPage}
         enableRowSelection

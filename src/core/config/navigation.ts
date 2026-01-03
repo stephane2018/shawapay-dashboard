@@ -8,7 +8,8 @@ import {
     People,
     Wallet2,
     Link21,
-    Code
+    Code,
+    Profile2User
 } from 'iconsax-react';
 
 export interface NavItem {
@@ -36,9 +37,19 @@ export const mainAccountNav: NavItem[] = [
         path: '/main/transactions',
     },
     {
-        label: 'Utilisateurs',
+        label: 'Clients',
         icon: People,
-        path: '/main/users',
+        path: '/main/clients',
+    },
+    {
+        label: 'Utilisateurs Backoffice',
+        icon: Profile2User,
+        path: '/main/backoffice-users',
+    },
+    {
+        label: 'Clients API',
+        icon: Code,
+        path: '/main/api-clients',
     },
     {
         label: 'Mes abonnements',

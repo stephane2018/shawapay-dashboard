@@ -4,6 +4,10 @@ import { tokenManager } from "./token-manager./token-manager";
 import { API_URL, REQUEST_HEADER_AUTH_KEY, TOKEN_TYPE, UNAUTHORIZED_STATUS_NUMBERS } from "../config/constante";
 import { toast } from "sonner";
 
+export interface CustomRequestConfig extends AxiosRequestConfig {
+  skipAuth?: boolean;
+}
+
 
 export class HttpClient {
   private static instance: HttpClient;
@@ -41,22 +45,22 @@ export class HttpClient {
     return HttpClient.instance.client;
   }
 
-  public async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  public async get<T>(url: string, config?: CustomRequestConfig): Promise<T> {
     const response = await this.client.get<T>(url, config);
     return response.data;
   }
 
-  public async post<T>(url: string, data?: RequestBody, config?: AxiosRequestConfig): Promise<T> {
+  public async post<T>(url: string, data?: RequestBody, config?: CustomRequestConfig): Promise<T> {
     const response = await this.client.post<T>(url, data, config);
     return response.data;
   }
 
-  public async put<T>(url: string, data?: RequestBody, config?: AxiosRequestConfig): Promise<T> {
+  public async put<T>(url: string, data?: RequestBody, config?: CustomRequestConfig): Promise<T> {
     const response = await this.client.put<T>(url, data, config);
     return response.data;
   }
 
-  public async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  public async delete<T>(url: string, config?: CustomRequestConfig): Promise<T> {
     const response = await this.client.delete<T>(url, config);
     return response.data;
   }
@@ -97,7 +101,12 @@ export class HttpClient {
 
   private withAuthorization() {
     this.interceptors.request.use((config) => {
-      const requestConfig = { ...config };
+      const requestConfig = { ...config } as InternalAxiosRequestConfig & { skipAuth?: boolean };
+
+      // Skip authorization if skipAuth flag is set
+      if (requestConfig.skipAuth) {
+        return requestConfig;
+      }
 
       const token = tokenManager.getToken();
 
