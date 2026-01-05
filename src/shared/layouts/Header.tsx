@@ -22,6 +22,8 @@ import {
 } from '@/shared/ui/dropdown-menu';
 import { ThemeToggle } from '@/core/components/ThemeToggle';
 import { useAccount } from '@/core/contexts/AccountContext';
+import { useAuthStore } from '@/core/store/auth.store';
+import type { Role } from '@/core/store/auth.store';
 import { cn } from '@/lib/utils';
 
 interface HeaderProps {
@@ -32,6 +34,23 @@ interface HeaderProps {
 
 export const Header = ({ SidebarComponent, onToggleSidebar, isSidebarOpen }: HeaderProps) => {
     const { environment, setEnvironment, activeAccountType } = useAccount();
+    const { user } = useAuthStore();
+
+    // Generate user initials for avatar fallback
+    const getUserInitials = (username?: string) => {
+        if (!username) return 'U';
+        const names = username.split(' ');
+        if (names.length >= 2) {
+            return names[0][0].toUpperCase() + names[names.length - 1][0].toUpperCase();
+        }
+        return username.substring(0, 2).toUpperCase();
+    };
+
+    // Format role display
+    const formatRole = (role?: Role) => {
+        if (!role) return 'Utilisateur';
+        return role.name;
+    };
 
     return (
         <header className="h-16 border-b bg-card flex items-center justify-between px-6">
@@ -189,11 +208,11 @@ export const Header = ({ SidebarComponent, onToggleSidebar, isSidebarOpen }: Hea
                         <div className="flex items-center gap-3 pl-2 cursor-pointer hover:bg-muted/50 rounded-lg p-2 transition-colors">
                             <Avatar className="h-8 w-8 border-2 border-white shadow-sm">
                                 <AvatarImage src="https://github.com/shadcn.png" />
-                                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-violet-500 text-white">SD</AvatarFallback>
+                                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-violet-500 text-white">{getUserInitials(user?.username)}</AvatarFallback>
                             </Avatar>
                             <div className="hidden md:block text-sm">
-                                <p className="font-medium leading-none">Stephane Davy</p>
-                                <p className="text-xs text-muted-foreground mt-0.5">Admin</p>
+                                <p className="font-medium leading-none">{user?.username || 'Utilisateur'}</p>
+                                <p className="text-xs text-muted-foreground mt-0.5">{user?.role?.name || 'Utilisateur'}</p>
                             </div>
                             <ArrowDown2 size={16} variant="Bulk" color="currentColor" className="text-muted-foreground" />
                         </div>
@@ -202,11 +221,16 @@ export const Header = ({ SidebarComponent, onToggleSidebar, isSidebarOpen }: Hea
                         <div className="flex items-center gap-3 px-3 py-3 border-b">
                             <Avatar className="h-10 w-10">
                                 <AvatarImage src="https://github.com/shadcn.png" />
-                                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-violet-500 text-white">SD</AvatarFallback>
+                                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-violet-500 text-white">{getUserInitials(user?.username)}</AvatarFallback>
                             </Avatar>
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium">Stephane Davy</p>
-                                <p className="text-xs text-muted-foreground truncate">stephane@shawapay.com</p>
+                                <p className="text-sm font-medium">{user?.username || 'Utilisateur'}</p>
+                                <p className="text-xs text-muted-foreground truncate">{user?.email || 'email@example.com'}</p>
+                                <div className="flex items-center gap-1 mt-1">
+                                    <Badge variant="secondary" className="text-xs">
+                                        {user?.role?.name || 'Utilisateur'}
+                                    </Badge>
+                                </div>
                             </div>
                         </div>
                         <div className="py-2">

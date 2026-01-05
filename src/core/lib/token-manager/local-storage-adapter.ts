@@ -1,4 +1,4 @@
-import { STORAGE_KEY_NAME } from "@/core/config/constante";
+import { STORAGE_KEY_NAME } from "../../config/constante";
 
 export class LocalStorageAdapter {
   private readonly storage: Storage;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
-import { tokenManager } from '@/core/lib/token-manager./token-manager'
+import { tokenManager } from '@/core/lib/token-manager/token-manager'
 
 interface ProtectedRouteProps {
   children: React.ReactNode

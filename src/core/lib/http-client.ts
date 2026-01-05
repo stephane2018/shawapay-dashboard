@@ -1,6 +1,6 @@
 import axios, { type AxiosInstance, type AxiosInterceptorManager, type InternalAxiosRequestConfig, type AxiosResponse, type AxiosRequestConfig } from "axios";
 import type { RequestBody } from "./api-type";
-import { tokenManager } from "./token-manager./token-manager";
+import { tokenManager } from "./token-manager/token-manager";
 import { API_URL, REQUEST_HEADER_AUTH_KEY, TOKEN_TYPE, UNAUTHORIZED_STATUS_NUMBERS } from "../config/constante";
 import { toast } from "sonner";
 
