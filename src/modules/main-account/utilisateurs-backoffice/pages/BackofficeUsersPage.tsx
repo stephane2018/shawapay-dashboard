@@ -15,57 +15,7 @@ import {
 } from '@/shared/ui/dropdown-menu'
 import { useBackofficeUsers } from '@/core/hooks/use-backoffice-users'
 import type { BackofficeUser } from '@/core/types/backoffice-user.types'
-
-// Columns definition
-const columns: ColumnDef<BackofficeUser>[] = [
-  {
-    accessorKey: 'username',
-    header: 'Utilisateur',
-    cell: ({ row }) => (
-      <div className="flex items-center gap-3">
-        <Avatar className="h-9 w-9">
-          <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white text-xs">
-            {row.original.username.substring(0, 2).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-        <div>
-          <p className="text-sm font-medium">{row.original.username}</p>
-          <p className="text-xs text-muted-foreground">ID: {row.original.id.substring(0, 8)}...</p>
-        </div>
-      </div>
-    ),
-  },
-  {
-    accessorKey: 'id',
-    header: 'ID',
-    cell: ({ row }) => (
-      <span className="text-sm font-mono text-muted-foreground">
-        {row.original.id.substring(0, 13)}...
-      </span>
-    ),
-  },
-  {
-    id: 'actions',
-    header: '',
-    cell: ({ row }) => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <More size={16} variant="Bulk" color="currentColor" className="text-primary" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem className="gap-2">
-            <Edit size={16} variant="Bulk" color="currentColor" /> Modifier
-          </DropdownMenuItem>
-          <DropdownMenuItem className="gap-2 text-red-600">
-            <Trash size={16} variant="Bulk" color="currentColor" /> Supprimer
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
-  },
-]
+import { BackofficeUserForm } from '../components/BackofficeUserForm'
 
 // Status tabs
 const statusTabs: StatusTab[] = [
@@ -75,7 +25,112 @@ const statusTabs: StatusTab[] = [
 export const BackofficeUsersPage = () => {
   const [activeStatus, setActiveStatus] = React.useState('all')
   const [currentPage, setCurrentPage] = React.useState(1)
+  const [isCreateFormOpen, setIsCreateFormOpen] = React.useState(false)
+  const [isEditFormOpen, setIsEditFormOpen] = React.useState(false)
+  const [selectedUser, setSelectedUser] = React.useState<BackofficeUser | null>(null)
+  const [isFormLoading, setIsFormLoading] = React.useState(false)
   const pageSize = 10
+
+  // Handle create user
+  const handleCreateUser = async (data: any) => {
+    setIsFormLoading(true)
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      console.log('Creating user:', data)
+      // In real app, you would refresh the data here
+    } catch (error) {
+      console.error('Error creating user:', error)
+    } finally {
+      setIsFormLoading(false)
+    }
+  }
+
+  // Handle edit user
+  const handleEditUser = async (data: any) => {
+    setIsFormLoading(true)
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      console.log('Updating user:', data)
+      // In real app, you would refresh the data here
+    } catch (error) {
+      console.error('Error updating user:', error)
+    } finally {
+      setIsFormLoading(false)
+    }
+  }
+
+  // Handle delete user
+  const handleDeleteUser = async (user: BackofficeUser) => {
+    if (window.confirm(`Êtes-vous sûr de vouloir supprimer l'utilisateur ${user.username} ?`)) {
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        console.log('Deleting user:', user)
+        // In real app, you would refresh the data here
+      } catch (error) {
+        console.error('Error deleting user:', error)
+      }
+    }
+  }
+
+  // Open edit form with selected user
+  const openEditForm = (user: BackofficeUser) => {
+    setSelectedUser(user)
+    setIsEditFormOpen(true)
+  }
+
+  // Columns definition with access to handlers
+  const columns: ColumnDef<BackofficeUser>[] = [
+    {
+      accessorKey: 'username',
+      header: 'Utilisateur',
+      cell: ({ row }) => (
+        <div className="flex items-center gap-3">
+          <Avatar className="h-9 w-9">
+            <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white text-xs">
+              {row.original.username.substring(0, 2).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="text-sm font-medium">{row.original.username}</p>
+            <p className="text-xs text-muted-foreground">ID: {row.original.id.substring(0, 8)}...</p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'id',
+      header: 'ID',
+      cell: ({ row }) => (
+        <span className="text-sm font-mono text-muted-foreground">
+          {row.original.id.substring(0, 13)}...
+        </span>
+      ),
+    },
+    {
+      id: 'actions',
+      header: '',
+      cell: ({ row }) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <More size={16} variant="Bulk" color="currentColor" className="text-primary" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem className="gap-2" onClick={() => openEditForm(row.original)}>
+              <Edit size={16} variant="Bulk" color="currentColor" /> Modifier
+            </DropdownMenuItem>
+            <DropdownMenuItem className="gap-2 text-red-600" onClick={() => handleDeleteUser(row.original)}>
+              <Trash size={16} variant="Bulk" color="currentColor" /> Supprimer
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+  ]
 
   // Fetch backoffice users from API
   const { data, isLoading, isError, error } = useBackofficeUsers({
@@ -128,7 +183,10 @@ export const BackofficeUsersPage = () => {
             )}
           </p>
         </div>
-        <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+        <Button 
+          className="bg-gradient-to-r from-purple-600 to-pink-600 text-white"
+          onClick={() => setIsCreateFormOpen(true)}
+        >
           + Ajouter un utilisateur
         </Button>
       </div>
@@ -151,6 +209,21 @@ export const BackofficeUsersPage = () => {
         currentPage={currentPage}
         onPageChange={setCurrentPage}
         enableRowSelection
+      />
+
+      {/* Forms */}
+      <BackofficeUserForm
+        open={isCreateFormOpen}
+        onOpenChange={setIsCreateFormOpen}
+        onSubmit={handleCreateUser}
+        isLoading={isFormLoading}
+      />
+      <BackofficeUserForm
+        open={isEditFormOpen}
+        onOpenChange={setIsEditFormOpen}
+        user={selectedUser}
+        onSubmit={handleEditUser}
+        isLoading={isFormLoading}
       />
     </div>
   )

@@ -15,6 +15,7 @@ import {
 } from '@/shared/ui/dropdown-menu'
 import { useCustomers } from '@/core/hooks/use-customers'
 import type { Customer } from '@/core/types/customer.types'
+import { CustomerCreateForm } from '../components/CustomerCreateForm'
 
 // Customer display type
 interface CustomerDisplay {
@@ -171,6 +172,8 @@ const statusTabs: StatusTab[] = [
 export const ClientsPage = () => {
   const [activeStatus, setActiveStatus] = React.useState('all')
   const [currentPage, setCurrentPage] = React.useState(1)
+  const [isCreateFormOpen, setIsCreateFormOpen] = React.useState(false)
+  const [isFormLoading, setIsFormLoading] = React.useState(false)
   const pageSize = 10
 
   // Fetch customers from API
@@ -208,6 +211,23 @@ export const ClientsPage = () => {
     }
   }, [data])
 
+  // Handle create customer
+  const handleCreateCustomer = async (data: any) => {
+    setIsFormLoading(true)
+    try {
+      // Simulate API call - replace with actual API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      console.log('Creating customer:', data)
+      // TODO: Replace with actual API call to create customer
+      setIsCreateFormOpen(false)
+      // Optionally refetch customers or update local state
+    } catch (error) {
+      console.error('Error creating customer:', error)
+    } finally {
+      setIsFormLoading(false)
+    }
+  }
+
   // Show error state
   if (isError) {
     return (
@@ -241,7 +261,10 @@ export const ClientsPage = () => {
             )}
           </p>
         </div>
-        <Button className="bg-gradient-to-r from-blue-600 to-violet-600 text-white">
+        <Button 
+          className="bg-gradient-to-r from-blue-600 to-violet-600 text-white"
+          onClick={() => setIsCreateFormOpen(true)}
+        >
           + Ajouter un client
         </Button>
       </div>
@@ -264,6 +287,12 @@ export const ClientsPage = () => {
         currentPage={currentPage}
         onPageChange={setCurrentPage}
         enableRowSelection
+      />
+      <CustomerCreateForm
+        open={isCreateFormOpen}
+        onOpenChange={setIsCreateFormOpen}
+        onSubmit={handleCreateCustomer}
+        isLoading={isFormLoading}
       />
     </div>
   )

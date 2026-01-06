@@ -16,6 +16,7 @@ import {
 import { useApiClients } from '@/core/hooks/use-api-clients'
 import type { ApiClient } from '@/core/types/api-client.types'
 import { toast } from 'sonner'
+import { ApiClientForm } from '../components/ApiClientForm'
 
 // Status badge component
 const StatusBadge = ({ active }: { active: boolean }) => {
@@ -64,61 +65,6 @@ const ApiKeyDisplay = ({ apiKey }: { apiKey: string }) => {
   )
 }
 
-// Columns definition
-const columns: ColumnDef<ApiClient>[] = [
-  {
-    accessorKey: 'owner',
-    header: 'Propriétaire',
-    cell: ({ row }) => (
-      <div className="flex items-center gap-3">
-        <Avatar className="h-9 w-9">
-          <AvatarFallback className="bg-gradient-to-br from-cyan-500 to-blue-500 text-white text-xs">
-            {row.original.owner.split(' ').map(n => n[0]).join('')}
-          </AvatarFallback>
-        </Avatar>
-        <div>
-          <p className="text-sm font-medium">{row.original.owner}</p>
-          <p className="text-xs text-muted-foreground">ID: {row.original.id.substring(0, 8)}...</p>
-        </div>
-      </div>
-    ),
-  },
-  {
-    accessorKey: 'apiKey',
-    header: 'Clé API',
-    cell: ({ row }) => <ApiKeyDisplay apiKey={row.original.apiKey} />,
-  },
-  {
-    accessorKey: 'active',
-    header: 'Statut',
-    cell: ({ row }) => <StatusBadge active={row.original.active} />,
-  },
-  {
-    id: 'actions',
-    header: '',
-    cell: ({ row }) => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <More size={16} variant="Bulk" color="currentColor" className="text-primary" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem className="gap-2">
-            <Edit size={16} variant="Bulk" color="currentColor" /> Modifier
-          </DropdownMenuItem>
-          <DropdownMenuItem className="gap-2">
-            <Copy size={16} variant="Bulk" color="currentColor" /> Copier la clé
-          </DropdownMenuItem>
-          <DropdownMenuItem className="gap-2 text-red-600">
-            <Trash size={16} variant="Bulk" color="currentColor" /> Supprimer
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
-  },
-]
-
 // Status tabs
 const statusTabs: StatusTab[] = [
   { value: 'active', label: 'Actifs', icon: <TickCircle size={16} variant="Bulk" color="currentColor" className="text-primary" /> },
@@ -129,7 +75,119 @@ const statusTabs: StatusTab[] = [
 export const ApiClientsPage = () => {
   const [activeStatus, setActiveStatus] = React.useState('all')
   const [currentPage, setCurrentPage] = React.useState(1)
+  const [isCreateFormOpen, setIsCreateFormOpen] = React.useState(false)
+  const [isEditFormOpen, setIsEditFormOpen] = React.useState(false)
+  const [selectedClient, setSelectedClient] = React.useState<ApiClient | null>(null)
+  const [isFormLoading, setIsFormLoading] = React.useState(false)
+  const [generatedApiKey, setGeneratedApiKey] = React.useState<string>('')
   const pageSize = 10
+
+  // Handle create API client
+  const handleCreateClient = async (data: any) => {
+    setIsFormLoading(true)
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      const newApiKey = 'sk_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+      setGeneratedApiKey(newApiKey)
+      console.log('Creating API client:', data, 'with key:', newApiKey)
+    } catch (error) {
+      console.error('Error creating API client:', error)
+    } finally {
+      setIsFormLoading(false)
+    }
+  }
+
+  // Handle edit API client
+  const handleEditClient = async (data: any) => {
+    setIsFormLoading(true)
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      console.log('Updating API client:', data)
+      setIsEditFormOpen(false)
+      // In real app, you would refresh the data here
+    } catch (error) {
+      console.error('Error updating API client:', error)
+    } finally {
+      setIsFormLoading(false)
+    }
+  }
+
+  // Handle delete API client
+  const handleDeleteClient = async (client: ApiClient) => {
+    if (window.confirm(`Êtes-vous sûr de vouloir supprimer le client API ${client.owner} ?`)) {
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        console.log('Deleting API client:', client)
+        // In real app, you would refresh the data here
+      } catch (error) {
+        console.error('Error deleting API client:', error)
+      }
+    }
+  }
+
+  // Open edit form with selected client
+  const openEditForm = (client: ApiClient) => {
+    setSelectedClient(client)
+    setIsEditFormOpen(true)
+  }
+
+  // Columns definition with access to handlers
+  const columns: ColumnDef<ApiClient>[] = [
+    {
+      accessorKey: 'owner',
+      header: 'Propriétaire',
+      cell: ({ row }) => (
+        <div className="flex items-center gap-3">
+          <Avatar className="h-9 w-9">
+            <AvatarFallback className="bg-gradient-to-br from-cyan-500 to-blue-500 text-white text-xs">
+              {row.original.owner.split(' ').map(n => n[0]).join('')}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="text-sm font-medium">{row.original.owner}</p>
+            <p className="text-xs text-muted-foreground">ID: {row.original.id.substring(0, 8)}...</p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'apiKey',
+      header: 'Clé API',
+      cell: ({ row }) => <ApiKeyDisplay apiKey={row.original.apiKey} />,
+    },
+    {
+      accessorKey: 'active',
+      header: 'Statut',
+      cell: ({ row }) => <StatusBadge active={row.original.active} />,
+    },
+    {
+      id: 'actions',
+      header: '',
+      cell: ({ row }) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <More size={16} variant="Bulk" color="currentColor" className="text-primary" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem className="gap-2" onClick={() => openEditForm(row.original)}>
+              <Edit size={16} variant="Bulk" color="currentColor" /> Modifier
+            </DropdownMenuItem>
+            <DropdownMenuItem className="gap-2">
+              <Copy size={16} variant="Bulk" color="currentColor" /> Copier la clé
+            </DropdownMenuItem>
+            <DropdownMenuItem className="gap-2 text-red-600" onClick={() => handleDeleteClient(row.original)}>
+              <Trash size={16} variant="Bulk" color="currentColor" /> Supprimer
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+  ]
 
   // Fetch API clients from API
   const { data, isLoading, isError, error } = useApiClients({
@@ -196,7 +254,10 @@ export const ApiClientsPage = () => {
             )}
           </p>
         </div>
-        <Button className="bg-gradient-to-r from-cyan-600 to-blue-600 text-white">
+        <Button 
+          className="bg-gradient-to-r from-cyan-600 to-blue-600 text-white"
+          onClick={() => setIsCreateFormOpen(true)}
+        >
           + Générer une clé API
         </Button>
       </div>
@@ -219,6 +280,22 @@ export const ApiClientsPage = () => {
         currentPage={currentPage}
         onPageChange={setCurrentPage}
         enableRowSelection
+      />
+
+      {/* Forms */}
+      <ApiClientForm
+        open={isCreateFormOpen}
+        onOpenChange={setIsCreateFormOpen}
+        onSubmit={handleCreateClient}
+        isLoading={isFormLoading}
+        generatedApiKey={generatedApiKey}
+      />
+      <ApiClientForm
+        open={isEditFormOpen}
+        onOpenChange={setIsEditFormOpen}
+        client={selectedClient}
+        onSubmit={handleEditClient}
+        isLoading={isFormLoading}
       />
     </div>
   )

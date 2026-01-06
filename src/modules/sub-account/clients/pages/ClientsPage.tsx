@@ -24,6 +24,7 @@ import {
     DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu'
 import { UserCheck } from 'lucide-react'
+import { ClientForm } from '../components/ClientForm'
 
 // Client type
 interface Client {
@@ -109,82 +110,6 @@ const StatusBadge = ({ status }: { status: Client['status'] }) => {
     return <Badge className={className}>{label}</Badge>
 }
 
-// Columns definition
-const columns: ColumnDef<Client>[] = [
-    {
-        accessorKey: 'name',
-        header: 'Client',
-        cell: ({ row }) => (
-            <div className="flex items-center gap-3">
-                <Avatar className="h-9 w-9">
-                    <AvatarImage src={row.original.avatar} />
-                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-violet-500 text-white text-xs">
-                        {row.original.name.split(' ').map(n => n[0]).join('')}
-                    </AvatarFallback>
-                </Avatar>
-                <div>
-                    <p className="text-sm font-medium">{row.original.name}</p>
-                    <p className="text-xs text-muted-foreground">{row.original.email}</p>
-                </div>
-            </div>
-        ),
-    },
-    {
-        accessorKey: 'phone',
-        header: 'Téléphone',
-        cell: ({ row }) => <span className="text-sm">{row.original.phone}</span>,
-    },
-    {
-        accessorKey: 'totalSpent',
-        header: 'Total dépensé',
-        cell: ({ row }) => (
-            <span className="text-sm font-medium">{row.original.totalSpent.toLocaleString('fr-FR')} XOF</span>
-        ),
-    },
-    {
-        accessorKey: 'transactionCount',
-        header: 'Transactions',
-        cell: ({ row }) => <span className="text-sm">{row.original.transactionCount}</span>,
-    },
-    {
-        accessorKey: 'status',
-        header: 'Statut',
-        cell: ({ row }) => <StatusBadge status={row.original.status} />,
-    },
-    {
-        accessorKey: 'lastTransaction',
-        header: 'Dernière transaction',
-        cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original.lastTransaction}</span>,
-    },
-    {
-        id: 'actions',
-        header: '',
-        cell: ({ row }) => (
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <More size={16} variant="Bulk" color="currentColor" className="text-primary" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    <DropdownMenuItem className="gap-2">
-                        <Sms size={16} variant="Bulk" color="currentColor" /> Envoyer un email
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="gap-2">
-                        <Call size={16} variant="Bulk" color="currentColor" /> Appeler
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="gap-2">
-                        <Edit size={16} variant="Bulk" color="currentColor" /> Modifier
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="gap-2 text-red-600">
-                        <Trash size={16} variant="Bulk" color="currentColor" /> Supprimer
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
-        ),
-    },
-]
-
 // Status tabs
 const statusTabs: StatusTab[] = [
     { value: 'active', label: 'Actifs', icon: <UserCheck size={16} color="currentColor" className="text-primary" /> },
@@ -196,6 +121,136 @@ const statusTabs: StatusTab[] = [
 export const ClientsPage = () => {
     const [activeStatus, setActiveStatus] = React.useState('all')
     const [currentPage, setCurrentPage] = React.useState(1)
+    const [isCreateFormOpen, setIsCreateFormOpen] = React.useState(false)
+    const [isEditFormOpen, setIsEditFormOpen] = React.useState(false)
+    const [selectedClient, setSelectedClient] = React.useState<Client | null>(null)
+    const [isLoading, setIsLoading] = React.useState(false)
+
+    // Handle create client
+    const handleCreateClient = async (data: any) => {
+        setIsLoading(true)
+        try {
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1000))
+            console.log('Creating client:', data)
+            // In real app, you would refresh the data here
+        } catch (error) {
+            console.error('Error creating client:', error)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    // Handle edit client
+    const handleEditClient = async (data: any) => {
+        setIsLoading(true)
+        try {
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1000))
+            console.log('Updating client:', data)
+            // In real app, you would refresh the data here
+        } catch (error) {
+            console.error('Error updating client:', error)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    // Handle delete client
+    const handleDeleteClient = async (client: Client) => {
+        if (window.confirm(`Êtes-vous sûr de vouloir supprimer le client ${client.name} ?`)) {
+            try {
+                // Simulate API call
+                await new Promise(resolve => setTimeout(resolve, 1000))
+                console.log('Deleting client:', client)
+                // In real app, you would refresh the data here
+            } catch (error) {
+                console.error('Error deleting client:', error)
+            }
+        }
+    }
+
+    // Open edit form with selected client
+    const openEditForm = (client: Client) => {
+        setSelectedClient(client)
+        setIsEditFormOpen(true)
+    }
+
+    // Columns definition with access to handlers
+    const columns: ColumnDef<Client>[] = [
+        {
+            accessorKey: 'name',
+            header: 'Client',
+            cell: ({ row }) => (
+                <div className="flex items-center gap-3">
+                    <Avatar className="h-9 w-9">
+                        <AvatarImage src={row.original.avatar} />
+                        <AvatarFallback className="bg-gradient-to-br from-blue-500 to-violet-500 text-white text-xs">
+                            {row.original.name.split(' ').map(n => n[0]).join('')}
+                        </AvatarFallback>
+                    </Avatar>
+                    <div>
+                        <p className="text-sm font-medium">{row.original.name}</p>
+                        <p className="text-xs text-muted-foreground">{row.original.email}</p>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            accessorKey: 'phone',
+            header: 'Téléphone',
+            cell: ({ row }) => <span className="text-sm">{row.original.phone}</span>,
+        },
+        {
+            accessorKey: 'totalSpent',
+            header: 'Total dépensé',
+            cell: ({ row }) => (
+                <span className="text-sm font-medium">{row.original.totalSpent.toLocaleString('fr-FR')} XOF</span>
+            ),
+        },
+        {
+            accessorKey: 'transactionCount',
+            header: 'Transactions',
+            cell: ({ row }) => <span className="text-sm">{row.original.transactionCount}</span>,
+        },
+        {
+            accessorKey: 'status',
+            header: 'Statut',
+            cell: ({ row }) => <StatusBadge status={row.original.status} />,
+        },
+        {
+            accessorKey: 'lastTransaction',
+            header: 'Dernière transaction',
+            cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original.lastTransaction}</span>,
+        },
+        {
+            id: 'actions',
+            header: '',
+            cell: ({ row }) => (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <More size={16} variant="Bulk" color="currentColor" className="text-primary" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem className="gap-2">
+                            <Sms size={16} variant="Bulk" color="currentColor" /> Envoyer un email
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="gap-2">
+                            <Call size={16} variant="Bulk" color="currentColor" /> Appeler
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="gap-2" onClick={() => openEditForm(row.original)}>
+                            <Edit size={16} variant="Bulk" color="currentColor" /> Modifier
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="gap-2 text-red-600" onClick={() => handleDeleteClient(row.original)}>
+                            <Trash size={16} variant="Bulk" color="currentColor" /> Supprimer
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            ),
+        },
+    ]
 
     // Filter clients by status
     const filteredClients = React.useMemo(() => {
@@ -216,7 +271,10 @@ export const ClientsPage = () => {
                         Gérez vos clients et suivez leurs activités
                     </p>
                 </div>
-                <Button className="bg-gradient-to-r from-blue-600 to-violet-600 text-white">
+                <Button 
+                    className="bg-gradient-to-r from-blue-600 to-violet-600 text-white"
+                    onClick={() => setIsCreateFormOpen(true)}
+                >
                     + Ajouter un client
                 </Button>
             </div>
@@ -254,6 +312,21 @@ export const ClientsPage = () => {
                 currentPage={currentPage}
                 onPageChange={setCurrentPage}
                 enableRowSelection
+            />
+
+            {/* Forms */}
+            <ClientForm
+                open={isCreateFormOpen}
+                onOpenChange={setIsCreateFormOpen}
+                onSubmit={handleCreateClient}
+                isLoading={isLoading}
+            />
+            <ClientForm
+                open={isEditFormOpen}
+                onOpenChange={setIsEditFormOpen}
+                client={selectedClient}
+                onSubmit={handleEditClient}
+                isLoading={isLoading}
             />
         </div>
     )
